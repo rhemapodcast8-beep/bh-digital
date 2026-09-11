@@ -1,0 +1,66 @@
+[
+  {
+    "cat": "Jovens",
+    "titles": [
+      "Descobrindo seu propósito", "Identidade em Cristo", "Fazendo escolhas sábias",
+      "O poder das amizades", "Lidando com a pressão social", "Vivendo a fé na escola/faculdade",
+      "Redes sociais e vida cristã", "Vocação e carreira"
+    ]
+  },
+  {
+    "cat": "Evangelismo",
+    "titles": [
+      "A Grande Comissão hoje", "O poder do testemunho", "O que é discipulado?",
+      "Evangelismo relacional", "Missões transculturais", "Serviço como evangelismo",
+      "Compaixão pelas almas", "A igreja em missão"
+    ]
+  },
+  {
+    "cat": "Devocional Curto",
+    "titles": [
+      "A paz que excede o entendimento", "O tempo de Deus é perfeito", "Coragem para enfrentar gigantes",
+      "Alegria no Senhor", "O cuidado de Deus nos vales", "Luz para o caminho",
+      "A suficiência da graça", "Renovando as forças"
+    ]
+  },
+  {
+    "cat": "Doutrina Cristã",
+    "titles": [
+      "A doutrina da Trindade", "A divindade de Cristo", "A obra do Espírito Santo",
+      "A inspiração das Escrituras", "A doutrina da salvação", "O que é a Igreja?",
+      "A ressurreição dos mortos", "A doutrina da graça"
+    ]
+  },
+  {
+    "cat": "Teologia Bíblica",
+    "titles": [
+      "A narrativa da criação", "A teologia da aliança", "O Reino de Deus",
+      "O simbolismo do Templo", "A presença de Deus", "O novo Êxodo",
+      "A esperança messiânica", "A redenção cósmica"
+    ]
+  },
+  {
+    "cat": "Cronologia Bíblica",
+    "titles": [
+      "A era dos patriarcas", "O Êxodo e a peregrinação", "O período dos juízes",
+      "A monarquia unida", "O reino dividido", "O exílio babilônico",
+      "O retorno e a reconstrução", "O período do Segundo Templo"
+    ]
+  },
+  {
+    "cat": "Perguntas Difíceis",
+    "titles": [
+      "O problema do sofrimento", "As guerras no Antigo Testamento", "O silêncio de Deus",
+      "O sofrimento de Jó", "A exclusividade de Cristo", "Diferenças nos Evangelhos",
+      "A questão dos milagres hoje", "O livre arbítrio e a soberania"
+    ]
+  },
+  {
+    "cat": "Como Estudar a Bíblia",
+    "titles": [
+      "A importância do contexto literário", "Contexto histórico e cultural", "Observação, interpretação e aplicação",
+      "Como fazer um estudo de palavras", "Comparando passagens paralelas", "Erros comuns de interpretação",
+      "O papel do Espírito Santo no estudo", "Usando ferramentas bíblicas"
+    ]
+  }
+]

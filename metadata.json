@@ -1,0 +1,6 @@
+{
+  "name": "BH DIGITAL",
+  "description": "Plataforma digital profissional: Palavra, Estudos, Devocionais, Livros e Ferramentas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

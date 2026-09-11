@@ -1,0 +1,66 @@
+[
+  {
+    "cat": "Curiosidades Bíblicas",
+    "titles": [
+      "O mistério do Urim e Tumim", "Como era o calendário judaico?", "A origem do alfabeto hebraico", 
+      "As muralhas de Jericó e a arqueologia", "O que eram os filactérios?", "A importância do azeite na antiguidade",
+      "Como as cartas de Paulo viajavam?", "O uso do vinho no mundo antigo"
+    ]
+  },
+  {
+    "cat": "Você Sabia?",
+    "titles": [
+      "A Arca da Aliança tinha anéis e varas", "Davi não foi o único a matar gigantes", "Havia mais de um Herodes",
+      "O significado dos nomes de Deus", "Os diferentes tipos de sacrifícios", "O tabernáculo era desmontável",
+      "Jesus era carpinteiro ou pedreiro?", "A origem dos samaritanos"
+    ]
+  },
+  {
+    "cat": "Personagens Bíblicos",
+    "titles": [
+      "A fé inabalável de Abraão", "Moisés: De príncipe a pastor", "Davi: Um homem segundo o coração de Deus",
+      "Elias e o desafio no Carmelo", "Daniel na corte da Babilônia", "Paulo de Tarso: O apóstolo dos gentios",
+      "Pedro: O pescador transformado", "Maria de Betânia: Aos pés de Jesus"
+    ]
+  },
+  {
+    "cat": "Lugares da Bíblia",
+    "titles": [
+      "Jerusalém: A cidade do grande Rei", "O Mar da Galileia no tempo de Jesus", "O Monte Sinai e a Aliança",
+      "Belém: A casa do pão", "Nazaré: Onde Jesus cresceu", "Deserto da Judeia: Lugar de provação",
+      "O Rio Jordão e seus milagres", "Samaria: A região dividida"
+    ]
+  },
+  {
+    "cat": "Palavras da Bíblia",
+    "titles": [
+      "Graça: O favor imerecido", "Aliança: O pacto de sangue", "Redenção: O resgate pago",
+      "Santidade: Separados para Deus", "Justificação: Declarados justos", "Arrependimento: Mudança de mente",
+      "Misericórdia: O amor que poupa", "Reconciliação: Paz com Deus"
+    ]
+  },
+  {
+    "cat": "Perguntas Bíblicas",
+    "titles": [
+      "Por que existem quatro Evangelhos?", "Por que Jesus ensinava por parábolas?", "O que significa nascer de novo?",
+      "Por que o Antigo Testamento é importante?", "O que significa Reino de Deus?", "Como interpretar genealogias bíblicas?",
+      "Por que a Bíblia possui diferentes gêneros?", "O que significa temer a Deus?"
+    ]
+  },
+  {
+    "cat": "Contexto Bíblico",
+    "titles": [
+      "Como era uma casa no mundo bíblico?", "O cotidiano no tempo de Jesus", "O papel dos escribas",
+      "Os fariseus e seu contexto", "O sistema de peregrinações judaicas", "O significado das sinagogas",
+      "O contexto do templo de Herodes", "As rotas comerciais do Oriente Próximo"
+    ]
+  },
+  {
+    "cat": "História Bíblica",
+    "titles": [
+      "O período intertestamentário", "A ascensão do Império Romano", "A queda de Jerusalém em 70 d.C.",
+      "A dinastia dos macabeus", "O cativeiro babilônico", "A divisão do reino de Israel",
+      "O tempo dos juízes", "As revoltas judaicas"
+    ]
+  }
+]

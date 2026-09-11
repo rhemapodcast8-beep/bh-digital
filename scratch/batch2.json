@@ -1,0 +1,58 @@
+[
+  {
+    "cat": "Geografia Bíblica",
+    "titles": [
+      "A planície de Megido", "O Vale de Josafá", "As montanhas de Israel",
+      "O deserto do Sinai", "O Rio Nilo na narrativa bíblica", "A cidade de Jericó",
+      "O relevo da Judeia", "O caminho de Jerusalém para Jericó"
+    ]
+  },
+  {
+    "cat": "Profecias",
+    "titles": [
+      "As 70 semanas de Daniel", "A restauração de Israel", "A queda da Babilônia",
+      "O Messias sofredor em Isaías 53", "A profecia do templo", "A visão do vale de ossos secos",
+      "O derramar do Espírito em Joel", "O servo do Senhor"
+    ]
+  },
+  {
+    "cat": "Parábolas",
+    "titles": [
+      "A parábola do Semeador", "O Bom Samaritano", "O Filho Pródigo",
+      "A Ovelha Perdida", "A Dracma Perdida", "Os Dez Talentos",
+      "As Dez Virgens", "O Fariseu e o Publicano"
+    ]
+  },
+  {
+    "cat": "Bíblia e Vida Prática",
+    "titles": [
+      "Como tomar decisões bíblicas", "A importância da disciplina", "O poder do perdão",
+      "A virtude da humildade", "Uma visão bíblica do trabalho", "Responsabilidade cristã",
+      "Liderança servidora", "Perseverança em tempos de crise"
+    ]
+  },
+  {
+    "cat": "Fé",
+    "titles": [
+      "A fé no meio da tempestade", "Fé e obediência andam juntas", "O escudo da fé",
+      "Fé e oração eficaz", "Superando a dúvida", "Confiança inabalável",
+      "O fruto da fé", "A fé que vence o mundo"
+    ]
+  },
+  {
+    "cat": "Oração",
+    "titles": [
+      "A oração sacerdotal de Jesus", "Oração e perseverança", "A importância da gratidão",
+      "Oração de confissão", "A oração comunitária", "Orando a vontade de Deus",
+      "Modelos de oração bíblica", "Desenvolvendo uma vida de oração"
+    ]
+  },
+  {
+    "cat": "Família",
+    "titles": [
+      "O papel dos pais na educação", "Honrando pai e mãe", "O perdão no lar",
+      "Comunicação no casamento", "Servindo juntos em família", "Deixando um legado espiritual",
+      "Culto doméstico", "Lidando com conflitos familiares"
+    ]
+  }
+]

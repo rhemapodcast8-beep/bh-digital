@@ -267,17 +267,20 @@ export function PerfilClient() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {MOCK_ESTUDOS.slice(0, 2).map((e) => (
+                {MOCK_ESTUDOS.slice(0, 2).map((e) => {
+                  const catSlug = e.categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                  return (
                   <Link
                     key={e.id}
-                    href={`/estudos/${e.slug}`}
+                    href={`/estudos/${catSlug}/${e.slug}`}
                     className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 space-y-2 group block"
                   >
                     <span className="text-[10px] font-bold uppercase text-[#E5C05B]">{e.categoria}</span>
                     <h4 className="text-sm font-bold text-white group-hover:text-[#E5C05B] transition-colors">{e.titulo}</h4>
                     <p className="text-xs text-slate-400 line-clamp-2">{e.resumo}</p>
                   </Link>
-                ))}
+                );
+                })}
               </div>
             </div>
           )}

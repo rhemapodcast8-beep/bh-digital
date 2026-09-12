@@ -284,10 +284,12 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {MOCK_ESTUDOS.slice(0, 3).map((estudo) => (
+            {MOCK_ESTUDOS.slice(0, 3).map((estudo) => {
+              const catSlug = estudo.categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+              return (
               <Link
                 key={estudo.id}
-                href={`/estudos/${estudo.slug}`}
+                href={`/estudos/${catSlug}/${estudo.slug}`}
                 className="group rounded-2xl bg-[#080E1B] border border-slate-800 hover:border-[#D4AF37]/50 flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg cursor-pointer"
               >
                 <div className="relative h-48 w-full overflow-hidden bg-slate-900">
@@ -323,7 +325,8 @@ export default function HomePage() {
                   </div>
                 </div>
               </Link>
-            ))}
+            );
+            })}
           </div>
         </section>
 

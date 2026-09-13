@@ -37,19 +37,7 @@ export async function POST(req: Request) {
           // Precisamos dos detalhes da assinatura para saber o end_date inicial
           const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
           
-          await supabase.from('subscriptions').upsert({
-            user_id: userId,
-            external_id: subscriptionId, // O id real da subscription stripe
-            stripe_customer_id: customerId, // Precisamos dessa coluna na tabela!
-            status: subscription.status,
-            plan: 'premium',
-            start_date: new Date(subscription.current_period_start * 1000).toISOString(),
-            end_date: new Date(subscription.current_period_end * 1000).toISOString(),
-            updated_at: new Date().toISOString()
-          }, { onConflict: 'external_id' }); // Supondo que external_id é único ou lidaremos via ID
-          // No schema atual external_id não é unique, então upsert só com external_id pode não funcionar
-          // Vamos fazer uma busca primeiro:
-          
+          // No schema atual external_id não é unique, então vamos fazer uma busca primeiro para atualizar ou inserir:
           const { data: existing } = await supabase
             .from('subscriptions')
             .select('id')

@@ -1,7 +1,5 @@
-/**
- * Service to manage access to premium tools.
- * Prepared for future integration with Supabase, authentication, and usage limits.
- */
+import { requirePremium } from '@/lib/premium';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export interface ToolAccessResult {
   allowed: boolean;
@@ -14,16 +12,18 @@ export async function checkToolAccess(
   toolKey: string,
   userId?: string
 ): Promise<ToolAccessResult> {
-  // TODO: Implement Supabase check for user limits and premium status.
-  // const supabase = createClient();
-  // const { data: user } = await supabase.auth.getUser();
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
   
-  // Example future logic:
-  // if (!user) return { allowed: false, reason: 'unauthenticated' };
-  // const isPremium = checkSubscription(user);
-  // if (!isPremium && usageCount > limit) return { allowed: false, reason: 'limit_reached' };
+  if (!user) {
+    return { allowed: false, reason: 'unauthenticated' };
+  }
 
-  // For now, allow all access unconditionally for testing
+  const isPremium = await requirePremium();
+  if (!isPremium) {
+    return { allowed: false, reason: 'premium_required' };
+  }
+
   return {
     allowed: true,
   };

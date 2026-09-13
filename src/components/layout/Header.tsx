@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import {
   Menu,
   X,
@@ -16,6 +17,7 @@ import {
   Crown,
   ChevronRight,
   Layers,
+  LogOut,
 } from 'lucide-react';
 
 const navItems = [
@@ -32,8 +34,39 @@ const navItems = [
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    
+    // Check initial session
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+      setAuthChecked(true);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (_event === 'SIGNED_IN' || _event === 'SIGNED_OUT') {
+        router.refresh();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [router]);
+
+  const handleLogout = async () => {
+    const supabase = createSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    router.refresh();
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -120,18 +153,41 @@ export function Header() {
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-2.5">
-            <Link
-              href="/auth/login"
-              className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
-            >
-              Entrar
-            </Link>
-            <Link
-              href="/auth/cadastro"
-              className="px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md shadow-blue-950/40 border border-blue-400/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Criar conta
-            </Link>
+            {!authChecked ? (
+              <div className="w-24 h-8 bg-slate-800/50 rounded-lg animate-pulse" />
+            ) : user ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/perfil"
+                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <User className="w-4 h-4" />
+                  Minha Conta
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-2 text-sm font-medium text-slate-400 hover:text-red-400 transition-colors"
+                  aria-label="Sair"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+                >
+                  Entrar
+                </Link>
+                <Link
+                  href="/auth/cadastro"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md shadow-blue-950/40 border border-blue-400/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Criar conta
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Hamburger */}
@@ -213,25 +269,44 @@ export function Header() {
 
           {/* Mobile Auth */}
           <div className="pt-4 border-t border-slate-800 flex flex-col gap-2.5">
-            <div className="grid grid-cols-2 gap-2">
-              <Link
-                href="/auth/login"
-                className="w-full py-3 text-center rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition-colors"
-              >
-                Entrar
-              </Link>
-              <Link
-                href="/auth/cadastro"
-                className="w-full py-3 text-center rounded-xl bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] text-white text-sm font-bold shadow-md"
-              >
-                Criar conta
-              </Link>
-            </div>
-            <div className="flex items-center justify-between pt-2 text-xs text-slate-400">
-              <Link href="/perfil" className="flex items-center gap-1.5 hover:text-slate-200 transition-colors">
-                <User className="w-4 h-4 text-[#E5C05B]" />
-                <span>Minha Conta</span>
-              </Link>
+            {user ? (
+              <>
+                <div className="grid grid-cols-1 gap-2">
+                  <Link
+                    href="/perfil"
+                    className="w-full py-3 text-center flex items-center justify-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    Minha Conta
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full py-3 text-center flex items-center justify-center gap-2 rounded-xl bg-red-950/30 hover:bg-red-900/40 text-red-400 text-sm font-semibold border border-red-900/30 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sair
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href="/auth/login"
+                    className="w-full py-3 text-center rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition-colors"
+                  >
+                    Entrar
+                  </Link>
+                  <Link
+                    href="/auth/cadastro"
+                    className="w-full py-3 text-center rounded-xl bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] text-white text-sm font-bold shadow-md"
+                  >
+                    Criar conta
+                  </Link>
+                </div>
+              </>
+            )}
+            <div className="flex items-center justify-center pt-2 text-xs text-slate-400">
               <Link href="/admin" className="flex items-center gap-1.5 hover:text-slate-200 transition-colors">
                 <ShieldCheck className="w-4 h-4 text-slate-400" />
                 <span>Painel Admin</span>

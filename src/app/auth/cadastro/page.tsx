@@ -37,6 +37,7 @@ export default function CadastroPage() {
       email,
       password: senha,
       options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
           nome: nome,
         }

@@ -36,8 +36,14 @@ export async function POST() {
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (error) {
-    console.error('Erro ao criar sessão de checkout:', error);
-    return NextResponse.json({ error: 'Erro interno ao criar checkout' }, { status: 500 });
+  } catch (error: any) {
+    const safeError = {
+      type: error.type || 'UnknownType',
+      code: error.code || 'UnknownCode',
+      message: error.message || 'Erro desconhecido',
+      param: error.param || 'UnknownParam',
+    };
+    console.error('Erro ao criar sessão de checkout (Detalhes Seguros):', safeError);
+    return NextResponse.json({ error: 'Erro interno ao criar checkout', details: safeError }, { status: 500 });
   }
 }

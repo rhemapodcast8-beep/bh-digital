@@ -30,7 +30,25 @@ export function PerfilClient() {
   const [email, setEmail] = useState('leitor@bhdigital.com.br');
   const [bio, setBio] = useState('Estudante e leitor assíduo da Palavra no ecossistema BH DIGITAL.');
   const [notifEmail, setNotifEmail] = useState(true);
-  const [notifDaily, setNotifDaily] = useState(true);
+  const [notifDaily, setNotifDaily] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const handleCustomerPortal = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await fetch('/api/stripe/customer-portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Erro ao acessar o portal.');
+      }
+    } catch (e) {
+      alert('Erro interno.');
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -322,12 +340,21 @@ export function PerfilClient() {
                       <p className="text-xs text-slate-400">Acesso a todos os conteúdos públicos</p>
                     </div>
                   </div>
-                  <Link
-                    href="/premium"
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C59B27] text-slate-950 font-bold text-xs uppercase"
-                  >
-                    Fazer Upgrade
-                  </Link>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleCustomerPortal}
+                      disabled={portalLoading}
+                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase disabled:opacity-50"
+                    >
+                      {portalLoading ? 'Carregando...' : 'Gerenciar Assinatura'}
+                    </button>
+                    <Link
+                      href="/premium"
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C59B27] text-slate-950 font-bold text-xs uppercase hover:brightness-110"
+                    >
+                      Fazer Upgrade
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

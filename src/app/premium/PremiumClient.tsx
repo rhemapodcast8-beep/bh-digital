@@ -3,19 +3,19 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { 
-  Crown, 
-  Sparkles, 
-  FileText, 
-  BookOpen, 
-  User, 
-  HelpCircle, 
-  Mic, 
-  Layers, 
-  Download, 
-  Check, 
-  Clock, 
-  ChevronRight, 
+import {
+  Crown,
+  Sparkles,
+  FileText,
+  BookOpen,
+  User,
+  HelpCircle,
+  Mic,
+  Layers,
+  Download,
+  Check,
+  Clock,
+  ChevronRight,
   ArrowRight,
   Info,
   CheckCircle2,
@@ -23,6 +23,7 @@ import {
   Lock
 } from 'lucide-react';
 import { MaterialItem } from '@/types';
+import { useCheckout } from '@/hooks/useCheckout';
 import { MOCK_MATERIAIS } from '@/lib/mockData';
 
 export function PremiumClient() {
@@ -31,6 +32,7 @@ export function PremiumClient() {
   const [toolSimulating, setToolSimulating] = useState<boolean>(false);
   const [toolResult, setToolResult] = useState<any | null>(null);
   const [interestRegistered, setInterestRegistered] = useState(false);
+  const { handleCheckout, isCheckoutLoading } = useCheckout();
 
   const premiumMaterials = MOCK_MATERIAIS.filter(m => m.premium === true);
 
@@ -164,13 +166,11 @@ export function PremiumClient() {
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
               <button
-                onClick={() => {
-                  setInterestRegistered(true);
-                  setTimeout(() => setInterestRegistered(false), 4000);
-                }}
-                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-[#E5C05B] to-[#C59B27] hover:brightness-110 text-slate-950 font-extrabold text-sm uppercase tracking-wider shadow-2xl shadow-amber-950/40 transition-all transform hover:-translate-y-0.5"
+                onClick={handleCheckout}
+                disabled={isCheckoutLoading}
+                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-[#E5C05B] to-[#C59B27] hover:brightness-110 text-slate-950 font-extrabold text-sm uppercase tracking-wider shadow-2xl shadow-amber-950/40 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Garantir Acesso Antecipado
+                {isCheckoutLoading ? 'Abrindo checkout...' : 'Assinar Premium'}
               </button>
 
               <Link

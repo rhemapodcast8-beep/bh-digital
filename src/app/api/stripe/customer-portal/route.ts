@@ -21,7 +21,10 @@ export async function POST() {
       return NextResponse.json({ error: 'Nenhum cliente Stripe associado' }, { status: 404 });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    let appUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    if (!appUrl.startsWith('http')) {
+      appUrl = `https://${appUrl}`;
+    }
 
     const session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripe_customer_id,

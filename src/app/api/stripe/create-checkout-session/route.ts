@@ -15,11 +15,13 @@ export async function POST() {
       return NextResponse.json({ error: 'STRIPE_PRICE_ID não configurado' }, { status: 500 });
     }
 
-    // A URL base da aplicação
-    const appUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    // Garante que a URL base da aplicação tem o protocolo http/https
+    let appUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    if (!appUrl.startsWith('http')) {
+      appUrl = `https://${appUrl}`;
+    }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [
         {

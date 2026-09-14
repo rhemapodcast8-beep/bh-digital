@@ -2,50 +2,71 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Layers, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { MOCK_LICOES, SERIE_LICOES } from '@/lib/mockData';
+import { Pagination } from '@/components/ui/Pagination';
 
 export const metadata: Metadata = {
   title: 'Lições Bíblicas',
   description: 'Série de estudos bíblicos estruturados: O Deus da Aliança — Advertências, promessas e bênçãos no livro de Deuteronômio.',
 };
 
-export default function LicoesPage() {
+const ITEMS_PER_PAGE = 12;
+
+export default async function LicoesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedSearchParams = await searchParams;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+  
+  const totalItems = MOCK_LICOES.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  
+  const currentItems = MOCK_LICOES.slice(startIndex, endIndex);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10">
 
-      {/* Header da Série */}
-      <Link href="/licoes" className="block relative p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-[#0F1E3A] via-[#0A1326] to-[#070D18] border-2 border-[#D4AF37]/50 shadow-2xl overflow-hidden group">
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 relative z-10">
-          <div className="flex-1 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#E5C05B] text-xs font-bold uppercase tracking-wider">
-              <Layers className="w-3.5 h-3.5" />
-              <span>SÉRIE DE ESTUDOS EM DESTAQUE</span>
+      {/* Header da Série (Apenas na página 1) */}
+      {currentPage === 1 && (
+        <Link href="/licoes" className="block relative p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-[#0F1E3A] via-[#0A1326] to-[#070D18] border-2 border-[#D4AF37]/50 shadow-2xl overflow-hidden group">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 relative z-10">
+            <div className="flex-1 space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#E5C05B] text-xs font-bold uppercase tracking-wider">
+                <Layers className="w-3.5 h-3.5" />
+                <span>SÉRIE DE ESTUDOS EM DESTAQUE</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">{SERIE_LICOES.titulo}</h1>
+              <p className="text-lg text-[#E5C05B] font-semibold">{SERIE_LICOES.subtitulo}</p>
+              <p className="text-sm text-slate-300 leading-relaxed max-w-3xl">{SERIE_LICOES.descricao}</p>
+              <div className="flex items-center gap-4 pt-2 text-xs text-slate-400">
+                <span className="font-bold text-[#E5C05B]">{SERIE_LICOES.totalLicoes} Lições Completas</span>
+                <span>•</span>
+                <span>Livro de Deuteronômio</span>
+                <span>•</span>
+                <span>Lançamento 1º Trimestre 2026</span>
+              </div>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">{SERIE_LICOES.titulo}</h1>
-            <p className="text-lg text-[#E5C05B] font-semibold">{SERIE_LICOES.subtitulo}</p>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-3xl">{SERIE_LICOES.descricao}</p>
-            <div className="flex items-center gap-4 pt-2 text-xs text-slate-400">
-              <span className="font-bold text-[#E5C05B]">{SERIE_LICOES.totalLicoes} Lições Completas</span>
-              <span>•</span>
-              <span>Livro de Deuteronômio</span>
-              <span>•</span>
-              <span>Lançamento 1º Trimestre 2026</span>
+            <div className="shrink-0 w-48 sm:w-64">
+                <img 
+                  src="/images/licoes/adultos/capa-o-deus-da-alianca.png" 
+                  alt="Lições Bíblicas Adultos — 4º Trimestre 2026 — O Deus da Aliança" 
+                className="w-full h-auto object-contain rounded-xl shadow-2xl border border-slate-700/50 group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
           </div>
-          <div className="shrink-0 w-48 sm:w-64">
-              <img 
-                src="/images/licoes/adultos/capa-o-deus-da-alianca.png" 
-                alt="Lições Bíblicas Adultos — 4º Trimestre 2026 — O Deus da Aliança" 
-              className="w-full h-auto object-contain rounded-xl shadow-2xl border border-slate-700/50 group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-        </div>
-      </Link>
+        </Link>
+      )}
 
       {/* Índice das Lições */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-white">Índice Completo das {SERIE_LICOES.totalLicoes} Lições</h2>
+        <h2 className="text-xl font-bold text-white">
+          {currentPage === 1 ? `Índice Completo das ${SERIE_LICOES.totalLicoes} Lições` : `Índice das Lições (Página ${currentPage})`}
+        </h2>
         <div className="space-y-3">
-          {MOCK_LICOES.map((licao) => (
+          {currentItems.map((licao) => (
             <Link
               key={licao.numero}
               href={`/licoes/${licao.slug}`}
@@ -95,6 +116,8 @@ export default function LicoesPage() {
             </Link>
           ))}
         </div>
+        
+        <Pagination totalPages={totalPages} />
       </div>
 
       {/* CTA Material PDF */}

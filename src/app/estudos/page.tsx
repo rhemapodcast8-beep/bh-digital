@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BookMarked, ChevronRight } from 'lucide-react';
 import { MOCK_ESTUDOS } from '@/lib/mockData';
+import { Pagination } from '@/components/ui/Pagination';
 
 export const metadata: Metadata = {
   title: 'Estudos Bíblicos',
@@ -25,7 +26,23 @@ function slugify(text: string) {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 }
 
-export default function EstudosPage() {
+const ITEMS_PER_PAGE = 12;
+
+export default async function EstudosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedSearchParams = await searchParams;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+  
+  const totalItems = MOCK_ESTUDOS.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  
+  const currentItems = MOCK_ESTUDOS.slice(startIndex, endIndex);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10">
 
@@ -60,7 +77,7 @@ export default function EstudosPage() {
 
       {/* Grid de Estudos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_ESTUDOS.map((estudo) => (
+        {currentItems.map((estudo) => (
           <Link
             href={`/estudos/${slugify(estudo.categoria)}/${estudo.slug}`}
             key={estudo.id}
@@ -106,6 +123,8 @@ export default function EstudosPage() {
           </Link>
         ))}
       </div>
+
+      <Pagination totalPages={totalPages} />
 
     </div>
   );

@@ -2,15 +2,31 @@ import type { Metadata } from 'next';
 import { BookOpen, ExternalLink, Star, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { MOCK_LIVROS } from '@/lib/mockData';
+import { Pagination } from '@/components/ui/Pagination';
 
 export const metadata: Metadata = {
   title: 'Livros | BH DIGITAL',
   description: 'Catálogo oficial de livros cristãos — Quando Deus Sopra, Jesus em Parábolas de Mateus e outros títulos edificantes para pastores, líderes e cristãos.',
 };
 
-export default function LivrosPage() {
+const ITEMS_PER_PAGE = 12;
+
+export default async function LivrosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedSearchParams = await searchParams;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+
   const destaques = MOCK_LIVROS.filter((l) => l.destaque);
-  const outros = MOCK_LIVROS.filter((l) => !l.destaque);
+  const todosOutros = MOCK_LIVROS.filter((l) => !l.destaque);
+  
+  const totalItems = todosOutros.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const outros = todosOutros.slice(startIndex, endIndex);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">
@@ -27,8 +43,8 @@ export default function LivrosPage() {
         </p>
       </div>
 
-      {/* Destaques */}
-      {destaques.length > 0 && (
+      {/* Destaques (Apenas na página 1) */}
+      {currentPage === 1 && destaques.length > 0 && (
         <section className="space-y-8">
           <h2 className="flex items-center gap-2 text-xl font-bold text-white">
             <Star className="w-5 h-5 text-[#D4AF37]" />
@@ -124,7 +140,9 @@ export default function LivrosPage() {
       {/* Outros Livros */}
       {outros.length > 0 && (
         <section className="space-y-8">
-          <h2 className="text-xl font-bold text-white border-b border-slate-800 pb-4">Mais Títulos</h2>
+          <h2 className="text-xl font-bold text-white border-b border-slate-800 pb-4">
+            {currentPage === 1 ? 'Mais Títulos' : `Mais Títulos (Página ${currentPage})`}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {outros.map((livro) => (
               <div
@@ -168,6 +186,8 @@ export default function LivrosPage() {
               </div>
             ))}
           </div>
+          
+          <Pagination totalPages={totalPages} />
         </section>
       )}
 

@@ -9,13 +9,30 @@ import {
   Users
 } from 'lucide-react';
 import { MOCK_LICOES_JOVENS } from '@/lib/mockData';
+import { Pagination } from '@/components/ui/Pagination';
 
 export const metadata: Metadata = {
   title: 'Lições Bíblicas Jovens | BH DIGITAL',
   description: 'Estudos bíblicos desenvolvidos especialmente para a juventude cristã, conectando a Palavra aos desafios do dia a dia.',
 };
 
-export default function LicoesJovensPage() {
+const ITEMS_PER_PAGE = 12;
+
+export default async function LicoesJovensPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedSearchParams = await searchParams;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+  
+  const totalItems = MOCK_LICOES_JOVENS.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  
+  const currentItems = MOCK_LICOES_JOVENS.slice(startIndex, endIndex);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
       
@@ -33,66 +50,68 @@ export default function LicoesJovensPage() {
         </p>
       </section>
 
-      {/* Revista Atual */}
-      <section className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#0F1E3A] via-[#0A1326] to-[#070D18] border border-[#2563EB]/30 p-8 sm:p-12 shadow-2xl">
-        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-          <Flame className="w-64 h-64 text-blue-500" />
-        </div>
-        
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-950/50 border border-blue-900/50 text-blue-300 text-xs font-bold uppercase tracking-widest">
-              <span>CPAD • 4º Trimestre 2026</span>
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-              Regozijai-vos no Senhor
-            </h2>
-            
-            <p className="text-lg text-blue-200 font-medium">
-              Vivendo com propósito à luz da Carta aos Filipenses
-            </p>
-            
-            <div className="pt-2">
-              <span className="text-sm text-slate-400 block mb-1 uppercase tracking-wider font-semibold">Comentarista</span>
-              <span className="text-base text-white font-bold">Reynaldo Odilo</span>
-            </div>
+      {/* Revista Atual (Apenas na página 1) */}
+      {currentPage === 1 && (
+        <section className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#0F1E3A] via-[#0A1326] to-[#070D18] border border-[#2563EB]/30 p-8 sm:p-12 shadow-2xl">
+          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+            <Flame className="w-64 h-64 text-blue-500" />
           </div>
+          
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-950/50 border border-blue-900/50 text-blue-300 text-xs font-bold uppercase tracking-widest">
+                <span>CPAD • 4º Trimestre 2026</span>
+              </div>
+              
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+                Regozijai-vos no Senhor
+              </h2>
+              
+              <p className="text-lg text-blue-200 font-medium">
+                Vivendo com propósito à luz da Carta aos Filipenses
+              </p>
+              
+              <div className="pt-2">
+                <span className="text-sm text-slate-400 block mb-1 uppercase tracking-wider font-semibold">Comentarista</span>
+                <span className="text-base text-white font-bold">Reynaldo Odilo</span>
+              </div>
+            </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6 z-10">
-            <div className="shrink-0 w-48 sm:w-56 order-first lg:order-last">
-              <Link href="/licoes-jovens">
-                <img 
-                  src="/images/licoes/capas/capa-jovens-4-trimestre-2026.jpg" 
-                  alt="Lições Bíblicas Jovens — 4º Trimestre 2026 — Regozijai-vos no Senhor" 
-                  className="w-full h-auto object-contain rounded-xl shadow-2xl border border-slate-700/50 hover:scale-105 transition-transform duration-500"
-                />
-              </Link>
+            <div className="flex flex-col sm:flex-row items-center gap-6 z-10">
+              <div className="shrink-0 w-48 sm:w-56 order-first lg:order-last">
+                <Link href="/licoes-jovens">
+                  <img 
+                    src="/images/licoes/capas/capa-jovens-4-trimestre-2026.jpg" 
+                    alt="Lições Bíblicas Jovens — 4º Trimestre 2026 — Regozijai-vos no Senhor" 
+                    className="w-full h-auto object-contain rounded-xl shadow-2xl border border-slate-700/50 hover:scale-105 transition-transform duration-500"
+                  />
+                </Link>
+              </div>
+              
+              <div className="bg-[#060B14]/80 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm flex-1">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <Target className="w-5 h-5 text-blue-400" />
+                Por que estudar esta revista?
+              </h3>
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  Descubra como manter a alegria verdadeira mesmo sob pressão na escola ou no trabalho.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  Aprenda com Paulo sobre ter o foco e o propósito alinhados a Cristo.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  Receba direcionamentos práticos para os conflitos diários da juventude.
+                </li>
+              </ul>
             </div>
-            
-            <div className="bg-[#060B14]/80 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm flex-1">
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Target className="w-5 h-5 text-blue-400" />
-              Por que estudar esta revista?
-            </h3>
-            <ul className="space-y-3 text-sm text-slate-300">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5">•</span>
-                Descubra como manter a alegria verdadeira mesmo sob pressão na escola ou no trabalho.
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5">•</span>
-                Aprenda com Paulo sobre ter o foco e o propósito alinhados a Cristo.
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5">•</span>
-                Receba direcionamentos práticos para os conflitos diários da juventude.
-              </li>
-            </ul>
+            </div>
           </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Grid de Lições */}
       <section className="space-y-8">
@@ -102,12 +121,12 @@ export default function LicoesJovensPage() {
             Índice de Lições
           </h3>
           <span className="text-sm font-medium text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
-            13 Lições
+            {totalItems} Lições
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MOCK_LICOES_JOVENS.map((licao) => (
+          {currentItems.map((licao) => (
             <Link 
               href={`/licoes-jovens/${licao.slug}`} 
               key={licao.numero}
@@ -148,6 +167,8 @@ export default function LicoesJovensPage() {
             </Link>
           ))}
         </div>
+        
+        <Pagination totalPages={totalPages} />
       </section>
 
     </div>

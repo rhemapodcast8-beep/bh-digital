@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { MOCK_DEVOCIONAIS } from '@/lib/data/devocionais';
+import { Pagination } from '@/components/ui/Pagination';
 
 export const metadata: Metadata = {
   title: 'Devocionais',
@@ -18,7 +19,16 @@ function formatDatePtBR(dateString: string) {
   }).format(date);
 }
 
-export default function DevocionalPage() {
+const ITEMS_PER_PAGE = 12;
+
+export default async function DevocionalPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedSearchParams = await searchParams;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+
   // Get today's date adjusted to local time, simple approach for "YYYY-MM-DD"
   const now = new Date();
   const year = now.getFullYear();
@@ -32,9 +42,14 @@ export default function DevocionalPage() {
 
   const destaque = MOCK_DEVOCIONAIS[todayIndex];
   
-  // Get previous 6 devotionals (wrap around to previous year if we implemented it, but here just clamp to 0)
-  const startIndex = Math.max(0, todayIndex - 6);
-  const anteriores = MOCK_DEVOCIONAIS.slice(startIndex, todayIndex).reverse();
+  // Devocionais anteriores
+  const todosAnteriores = MOCK_DEVOCIONAIS.slice(0, todayIndex).reverse();
+  const totalItems = todosAnteriores.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const anteriores = todosAnteriores.slice(startIndex, endIndex);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
@@ -50,8 +65,8 @@ export default function DevocionalPage() {
         </p>
       </div>
 
-      {/* Devocional em Destaque */}
-      {destaque && (
+      {/* Devocional em Destaque (Apenas na página 1) */}
+      {currentPage === 1 && destaque && (
         <Link 
           href={`/devocionais/${destaque.slug}`}
           className="block rounded-3xl bg-gradient-to-br from-[#0C1833] via-[#091226] to-[#070D1C] border border-blue-900/70 overflow-hidden shadow-2xl group transition-all hover:border-[#D4AF37]/50"
@@ -93,7 +108,9 @@ export default function DevocionalPage() {
       {/* Outros Devocionais */}
       {anteriores.length > 0 && (
         <div className="space-y-6">
-          <h3 className="text-xl font-bold text-white">Devocionais Anteriores</h3>
+          <h3 className="text-xl font-bold text-white">
+            {currentPage === 1 ? 'Devocionais Anteriores' : `Devocionais Anteriores (Página ${currentPage})`}
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {anteriores.map((dev) => (
               <Link
@@ -124,6 +141,8 @@ export default function DevocionalPage() {
               </Link>
             ))}
           </div>
+          
+          <Pagination totalPages={totalPages} />
         </div>
       )}
     </div>

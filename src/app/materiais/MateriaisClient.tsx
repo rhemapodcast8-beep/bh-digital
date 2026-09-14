@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   Search, 
   Filter, 
@@ -16,14 +16,27 @@ import {
 } from 'lucide-react';
 import { MaterialItem, MaterialCategoria } from '@/types';
 import { MOCK_MATERIAIS, CATEGORIAS_MATERIAIS } from '@/lib/mockData';
+import { Pagination } from '@/components/ui/Pagination';
+
+const ITEMS_PER_PAGE = 12;
 
 export function MateriaisClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MaterialCategoria | 'Todas'>('Todas');
   const [accessFilter, setAccessFilter] = useState<'Todos' | 'Gratuito' | 'Premium'>('Todos');
   const [activeMaterialModal, setActiveMaterialModal] = useState<MaterialItem | null>(null);
   const [downloadSuccessToast, setDownloadSuccessToast] = useState<string | null>(null);
+
+  // Reset to page 1 on filter changes by using router.push if we are not on page 1
+  useEffect(() => {
+    if (currentPage !== 1) {
+      router.push('/materiais');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, selectedCategory, accessFilter]);
 
   const filteredMateriais = useMemo(() => {
     return MOCK_MATERIAIS.filter((item) => {
@@ -247,91 +260,97 @@ export function MateriaisClient() {
 
         {/* Grid of Materials */}
         {filteredMateriais.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredMateriais.map((mat) => {
-              const isPremium = mat.premium;
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredMateriais.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((mat) => {
+                const isPremium = mat.premium;
 
-              return (
-                <Link
-                  key={mat.id}
-                  href={mat.slug ? `/materiais/${mat.slug}` : '/materiais'}
-                  className="group bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden hover:border-[#D4AF37]/50 transition-all flex flex-col hover:shadow-xl hover:shadow-blue-950/20 hover:-translate-y-0.5"
-                >
-                  {/* Thumbnail Cover */}
-                  <div className="relative h-44 overflow-hidden bg-slate-950">
-                    <img
-                      src={mat.imagem}
-                      alt={mat.titulo}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                return (
+                  <Link
+                    key={mat.id}
+                    href={mat.slug ? `/materiais/${mat.slug}` : '/materiais'}
+                    className="group bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden hover:border-[#D4AF37]/50 transition-all flex flex-col hover:shadow-xl hover:shadow-blue-950/20 hover:-translate-y-0.5"
+                  >
+                    {/* Thumbnail Cover */}
+                    <div className="relative h-44 overflow-hidden bg-slate-950">
+                      <img
+                        src={mat.imagem}
+                        alt={mat.titulo}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
-                    {/* Access Tag */}
-                    <div className="absolute top-3 left-3">
-                      {isPremium ? (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-[#D4AF37] text-slate-950 shadow-md">
-                          <Crown className="w-3 h-3" />
-                          PREMIUM
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 shadow-md">
-                          <Check className="w-3 h-3" />
-                          GRATUITO
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Format Badge */}
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-900/90 text-slate-300 border border-slate-700/80">
-                        {mat.tipo} • {mat.tamanho}
-                      </span>
-                    </div>
-
-                    <div className="absolute bottom-2.5 left-3 text-[11px] font-semibold text-[#E5C05B]">
-                      {mat.categoria}
-                    </div>
-                  </div>
-
-                  {/* Body Content */}
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                      <h3 className="text-base font-bold text-white group-hover:text-[#E5C05B] transition-colors line-clamp-2 leading-snug mb-2">
-                        {mat.titulo}
-                      </h3>
-                      <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
-                        {mat.descricao}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-800/80 space-y-3">
-                      <div className="flex items-center justify-between text-[11px] text-slate-500">
-                        <span>{mat.publicoAlvo}</span>
-                        <span>{mat.dataUpload}</span>
+                      {/* Access Tag */}
+                      <div className="absolute top-3 left-3">
+                        {isPremium ? (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-[#D4AF37] text-slate-950 shadow-md">
+                            <Crown className="w-3 h-3" />
+                            PREMIUM
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 shadow-md">
+                            <Check className="w-3 h-3" />
+                            GRATUITO
+                          </span>
+                        )}
                       </div>
 
-                      {/* Action Button */}
-                      {isPremium ? (
-                        <div
-                          className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-[#D4AF37]/15 group-hover:bg-[#D4AF37]/25 border border-[#D4AF37]/40 text-[#E5C05B] flex items-center justify-center gap-2 transition-all group-hover:border-[#E5C05B]"
-                        >
-                          <Lock className="w-3.5 h-3.5" />
-                          <span>VER DETALHES PREMIUM</span>
-                        </div>
-                      ) : (
-                        <div
-                          className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-800 group-hover:bg-slate-700 border border-slate-700 text-white flex items-center justify-center gap-2 transition-all group-hover:border-[#D4AF37]/40"
-                        >
-                          <Download className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>ACESSAR MATERIAL</span>
-                        </div>
-                      )}
+                      {/* Format Badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-900/90 text-slate-300 border border-slate-700/80">
+                          {mat.tipo} • {mat.tamanho}
+                        </span>
+                      </div>
+
+                      <div className="absolute bottom-2.5 left-3 text-[11px] font-semibold text-[#E5C05B]">
+                        {mat.categoria}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+
+                    {/* Body Content */}
+                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                      <div>
+                        <h3 className="text-base font-bold text-white group-hover:text-[#E5C05B] transition-colors line-clamp-2 leading-snug mb-2">
+                          {mat.titulo}
+                        </h3>
+                        <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                          {mat.descricao}
+                        </p>
+                      </div>
+
+                      <div className="pt-3 border-t border-slate-800/80 space-y-3">
+                        <div className="flex items-center justify-between text-[11px] text-slate-500">
+                          <span>{mat.publicoAlvo}</span>
+                          <span>{mat.dataUpload}</span>
+                        </div>
+
+                        {/* Action Button */}
+                        {isPremium ? (
+                          <div
+                            className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-[#D4AF37]/15 group-hover:bg-[#D4AF37]/25 border border-[#D4AF37]/40 text-[#E5C05B] flex items-center justify-center gap-2 transition-all group-hover:border-[#E5C05B]"
+                          >
+                            <Lock className="w-3.5 h-3.5" />
+                            <span>VER DETALHES PREMIUM</span>
+                          </div>
+                        ) : (
+                          <div
+                            className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-800 group-hover:bg-slate-700 border border-slate-700 text-white flex items-center justify-center gap-2 transition-all group-hover:border-[#D4AF37]/40"
+                          >
+                            <Download className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>ACESSAR MATERIAL</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            
+            <div className="mt-8">
+              <Pagination totalPages={Math.ceil(filteredMateriais.length / ITEMS_PER_PAGE)} />
+            </div>
+          </>
         ) : (
           <div className="p-12 text-center bg-slate-900/40 rounded-2xl border border-slate-800">
             <h3 className="text-xl font-bold text-white mb-2">Nenhum material encontrado</h3>

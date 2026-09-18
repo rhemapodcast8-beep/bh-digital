@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { RouteTracker } from '@/components/analytics/RouteTracker';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -51,6 +53,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={plusJakartaSans.variable}>
       <body className="min-h-screen flex flex-col bg-[#060B16] text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-slate-950 antialiased">
+        {/* GA4: rastreamento de visitantes e page views */}
+        <GoogleAnalytics />
+        <RouteTracker />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

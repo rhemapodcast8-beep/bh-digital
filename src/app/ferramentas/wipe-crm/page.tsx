@@ -6,11 +6,11 @@ import {
   ChevronRight, 
   Wrench, 
   CheckCircle2, 
-  MessageCircle, 
   LayoutDashboard, 
   Users, 
   TrendingUp 
 } from 'lucide-react';
+import { WipeCrmAnalytics, WhatsAppCTA } from './WipeCrmClient';
 
 export const metadata: Metadata = {
   title: 'WIPE CRM | BH Digital',
@@ -20,6 +20,8 @@ export const metadata: Metadata = {
 export default function WipeCrmPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      {/* GA4: rastreia visualização da página e cliques no WhatsApp */}
+      <WipeCrmAnalytics />
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-400">
         <Link href="/" className="hover:text-white transition-colors">Início</Link>
@@ -62,15 +64,7 @@ export default function WipeCrmPage() {
             </div>
 
             <div className="space-y-4">
-              <a 
-                href="https://wa.me/5582987616759?text=Ol%C3%A1%21+Tenho+interesse+no+WIPE+CRM+e+gostaria+de+saber+mais+sobre+o+teste+gr%C3%A1tis+de+7+dias." 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-full flex justify-center items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg py-4 px-8 rounded-xl transition-colors shadow-lg shadow-emerald-900/50"
-              >
-                <MessageCircle className="w-5 h-5" />
-                TESTAR 7 DIAS GRÁTIS
-              </a>
+              <WhatsAppCTA />
               <p className="text-xs text-center text-slate-400 italic">
                 Teste grátis por 7 dias. Entre em contato para ativar sua licença.
               </p>

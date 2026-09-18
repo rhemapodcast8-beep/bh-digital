@@ -1,5 +1,6 @@
 import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { ContatoForm } from './ContatoForm';
 
 export default function ContatoPage() {
   return (
@@ -40,25 +41,7 @@ export default function ContatoPage() {
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 space-y-6">
           <h2 className="text-2xl font-bold text-white">Envie uma mensagem</h2>
-          <form className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-300">Nome</label>
-                <input type="text" className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:border-[#D4AF37] outline-none" placeholder="Seu nome" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-300">E-mail</label>
-                <input type="email" className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:border-[#D4AF37] outline-none" placeholder="seu@email.com" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-300">Mensagem</label>
-              <textarea rows={5} className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:border-[#D4AF37] outline-none" placeholder="Como podemos ajudar?"></textarea>
-            </div>
-            <button type="button" className="px-8 py-3 bg-gradient-to-r from-[#D4AF37] to-[#C59B27] text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity">
-              Enviar Mensagem
-            </button>
-          </form>
+          <ContatoForm />
         </div>
 
         <div className="text-center pt-8">

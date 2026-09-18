@@ -9,138 +9,138 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. categories
 CREATE TABLE IF NOT EXISTS public.categories (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    description TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+name TEXT NOT NULL,
+slug TEXT UNIQUE NOT NULL,
+description TEXT,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 2. profiles
 CREATE TABLE IF NOT EXISTS public.profiles (
-    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    full_name TEXT,
-    avatar_url TEXT,
-    role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+full_name TEXT,
+avatar_url TEXT,
+role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 3. subscriptions
 CREATE TABLE IF NOT EXISTS public.subscriptions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    external_id TEXT,
-    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'canceled', 'expired', 'past_due')),
-    plan TEXT NOT NULL DEFAULT 'premium',
-    start_date TIMESTAMPTZ DEFAULT NOW(),
-    end_date TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-    CONSTRAINT valid_subscription_dates CHECK (end_date IS NULL OR end_date >= start_date)
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+external_id TEXT,
+status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'canceled', 'expired', 'past_due')),
+plan TEXT NOT NULL DEFAULT 'premium',
+start_date TIMESTAMPTZ DEFAULT NOW(),
+end_date TIMESTAMPTZ,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+CONSTRAINT valid_subscription_dates CHECK (end_date IS NULL OR end_date >= start_date)
 );
 
 -- 4. media_contents
 CREATE TABLE IF NOT EXISTS public.media_contents (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    title TEXT NOT NULL,
-    description TEXT,
-    platform TEXT NOT NULL CHECK (platform IN ('youtube', 'tiktok', 'kwai')),
-    video_id TEXT NOT NULL,
-    published_at TIMESTAMPTZ DEFAULT NOW(),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+title TEXT NOT NULL,
+description TEXT,
+platform TEXT NOT NULL CHECK (platform IN ('youtube', 'tiktok', 'kwai')),
+video_id TEXT NOT NULL,
+published_at TIMESTAMPTZ DEFAULT NOW(),
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 5. user_actions
 CREATE TABLE IF NOT EXISTS public.user_actions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    action_type TEXT NOT NULL CHECK (action_type IN ('bookmark', 'like', 'complete')),
-    content_type TEXT NOT NULL,
-    content_id UUID NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(user_id, action_type, content_type, content_id)
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+action_type TEXT NOT NULL CHECK (action_type IN ('bookmark', 'like', 'complete')),
+content_type TEXT NOT NULL,
+content_id UUID NOT NULL,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+UNIQUE(user_id, action_type, content_type, content_id)
 );
 
 -- 6. studies
 CREATE TABLE IF NOT EXISTS public.studies (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
-    title TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    excerpt TEXT,
-    content TEXT,
-    image_url TEXT,
-    category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
-    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-    is_premium BOOLEAN NOT NULL DEFAULT FALSE,
-    is_official BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+title TEXT NOT NULL,
+slug TEXT UNIQUE NOT NULL,
+excerpt TEXT,
+content TEXT,
+image_url TEXT,
+category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+is_premium BOOLEAN NOT NULL DEFAULT FALSE,
+is_official BOOLEAN NOT NULL DEFAULT FALSE,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 7. lessons
 CREATE TABLE IF NOT EXISTS public.lessons (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    title TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    audience TEXT NOT NULL CHECK (audience IN ('adultos', 'jovens')),
-    year INTEGER NOT NULL,
-    quarter INTEGER NOT NULL CHECK (quarter BETWEEN 1 AND 4),
-    lesson_number INTEGER NOT NULL CHECK (lesson_number > 0),
-    content TEXT,
-    image_url TEXT,
-    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-    is_premium BOOLEAN NOT NULL DEFAULT FALSE,
-    published_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE (audience, year, quarter, lesson_number)
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+title TEXT NOT NULL,
+slug TEXT UNIQUE NOT NULL,
+audience TEXT NOT NULL CHECK (audience IN ('adultos', 'jovens')),
+year INTEGER NOT NULL,
+quarter INTEGER NOT NULL CHECK (quarter BETWEEN 1 AND 4),
+lesson_number INTEGER NOT NULL CHECK (lesson_number > 0),
+content TEXT,
+image_url TEXT,
+status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+is_premium BOOLEAN NOT NULL DEFAULT FALSE,
+published_at TIMESTAMPTZ,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+UNIQUE (audience, year, quarter, lesson_number)
 );
 
 -- 8. devotionals
 CREATE TABLE IF NOT EXISTS public.devotionals (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    title TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    date_published DATE NOT NULL UNIQUE,
-    content TEXT,
-    image_url TEXT,
-    category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
-    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+title TEXT NOT NULL,
+slug TEXT UNIQUE NOT NULL,
+date_published DATE NOT NULL UNIQUE,
+content TEXT,
+image_url TEXT,
+category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 9. resources
 CREATE TABLE IF NOT EXISTS public.resources (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    type TEXT NOT NULL CHECK (type IN ('livro', 'material', 'pdf')),
-    slug TEXT UNIQUE NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT,
-    author TEXT,
-    cover_image_url TEXT,
-    storage_path TEXT,
-    external_url TEXT,
-    category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
-    is_premium BOOLEAN NOT NULL DEFAULT FALSE,
-    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+type TEXT NOT NULL CHECK (type IN ('livro', 'material', 'pdf')),
+slug TEXT UNIQUE NOT NULL,
+title TEXT NOT NULL,
+description TEXT,
+author TEXT,
+cover_image_url TEXT,
+storage_path TEXT,
+external_url TEXT,
+category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+is_premium BOOLEAN NOT NULL DEFAULT FALSE,
+status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 10. ai_generations
 CREATE TABLE IF NOT EXISTS public.ai_generations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    tool_used TEXT NOT NULL,
-    prompt_text TEXT NOT NULL CHECK (char_length(prompt_text) <= 1500),
-    result_text TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+tool_used TEXT NOT NULL,
+prompt_text TEXT NOT NULL CHECK (char_length(prompt_text) <= 1500),
+result_text TEXT,
+created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- ==================================================
@@ -191,10 +191,12 @@ CREATE INDEX idx_ai_generations_created_at ON public.ai_generations(created_at);
 CREATE OR REPLACE FUNCTION public.set_current_timestamp_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
+NEW.updated_at = NOW();
+RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+$$
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Triggers for updated_at
 CREATE TRIGGER set_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
@@ -209,46 +211,58 @@ CREATE TRIGGER set_resources_updated_at BEFORE UPDATE ON public.resources FOR EA
 
 -- is_admin
 CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS BOOLEAN AS $$
+RETURNS BOOLEAN AS
+$$
+
 DECLARE
-    user_role TEXT;
+user_role TEXT;
 BEGIN
-    SELECT role INTO user_role FROM public.profiles WHERE id = auth.uid();
-    RETURN COALESCE(user_role = 'admin', FALSE);
+SELECT role INTO user_role FROM public.profiles WHERE id = auth.uid();
+RETURN COALESCE(user_role = 'admin', FALSE);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+$$
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- is_premium
 CREATE OR REPLACE FUNCTION public.is_premium()
-RETURNS BOOLEAN AS $$
+RETURNS BOOLEAN AS
+$$
+
 DECLARE
-    has_premium BOOLEAN;
+has_premium BOOLEAN;
 BEGIN
-    SELECT EXISTS (
-        SELECT 1 FROM public.subscriptions
-        WHERE user_id = auth.uid()
-          AND status = 'active'
-          AND plan = 'premium'
-          AND (end_date IS NULL OR end_date > NOW())
-    ) INTO has_premium;
-    RETURN has_premium;
+SELECT EXISTS (
+SELECT 1 FROM public.subscriptions
+WHERE user_id = auth.uid()
+AND status = 'active'
+AND plan = 'premium'
+AND (end_date IS NULL OR end_date > NOW())
+) INTO has_premium;
+RETURN has_premium;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+$$
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- handle_new_user
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER AS
+$$
+
 BEGIN
-    INSERT INTO public.profiles (id, full_name, avatar_url, role)
-    VALUES (
-        NEW.id,
-        NEW.raw_user_meta_data->>'full_name',
-        NEW.raw_user_meta_data->>'avatar_url',
-        'user'
-    );
-    RETURN NEW;
+INSERT INTO public.profiles (id, full_name, avatar_url, role)
+VALUES (
+NEW.id,
+NEW.raw_user_meta_data->>'full_name',
+NEW.raw_user_meta_data->>'avatar_url',
+'user'
+);
+RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+$$
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
@@ -257,16 +271,20 @@ CREATE TRIGGER on_auth_user_created
 
 -- prevent_profile_role_update
 CREATE OR REPLACE FUNCTION public.prevent_profile_role_update()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER AS
+$$
+
 BEGIN
-    IF NOT public.is_admin() THEN
-        IF NEW.role IS DISTINCT FROM OLD.role THEN
-            RAISE EXCEPTION 'Usuários comuns não podem alterar o campo role.';
-        END IF;
-    END IF;
-    RETURN NEW;
+IF NOT public.is_admin() THEN
+IF NEW.role IS DISTINCT FROM OLD.role THEN
+RAISE EXCEPTION 'Usuários comuns não podem alterar o campo role.';
+END IF;
+END IF;
+RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+$$
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE TRIGGER enforce_profile_role_protection
 BEFORE UPDATE ON public.profiles
@@ -275,16 +293,20 @@ EXECUTE FUNCTION public.prevent_profile_role_update();
 
 -- prevent_study_official_escalation
 CREATE OR REPLACE FUNCTION public.prevent_study_official_escalation()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER AS
+$$
+
 BEGIN
-    IF NOT public.is_admin() THEN
-        IF NEW.is_official = TRUE THEN
-            RAISE EXCEPTION 'Usuários comuns não podem criar ou transformar estudos em oficiais.';
-        END IF;
-    END IF;
-    RETURN NEW;
+IF NOT public.is_admin() THEN
+IF NEW.is_official = TRUE THEN
+RAISE EXCEPTION 'Usuários comuns não podem criar ou transformar estudos em oficiais.';
+END IF;
+END IF;
+RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+$$
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE TRIGGER enforce_study_official_protection
 BEFORE INSERT OR UPDATE ON public.studies
@@ -389,7 +411,7 @@ CREATE POLICY "Protected Materials: Admin gerencia" ON storage.objects FOR ALL U
 -- 07 — SEED
 -- ==================================================
 
-INSERT INTO public.categories (name, slug) VALUES 
+INSERT INTO public.categories (name, slug) VALUES
 ('Parábolas', 'parabolas'),
 ('Fé', 'fe'),
 ('Oração', 'oracao'),
@@ -404,9 +426,9 @@ ON CONFLICT (slug) DO NOTHING;
 -- 08 — VALIDATION
 -- ==================================================
 
-SELECT table_name, column_name, data_type 
-FROM information_schema.columns 
-WHERE table_schema = 'public' 
+SELECT table_name, column_name, data_type
+FROM information_schema.columns
+WHERE table_schema = 'public'
 ORDER BY table_name;
 
 SELECT conname, pg_get_constraintdef(c.oid)
@@ -414,28 +436,29 @@ FROM pg_constraint c
 JOIN pg_namespace n ON n.oid = c.connamespace
 WHERE n.nspname = 'public';
 
-SELECT tablename, indexname, indexdef 
-FROM pg_indexes 
+SELECT tablename, indexname, indexdef
+FROM pg_indexes
 WHERE schemaname = 'public';
 
-SELECT proname, prosrc 
-FROM pg_proc 
+SELECT proname, prosrc
+FROM pg_proc
 WHERE pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');
 
-SELECT event_object_table, trigger_name, action_statement 
-FROM information_schema.triggers 
+SELECT event_object_table, trigger_name, action_statement
+FROM information_schema.triggers
 WHERE trigger_schema = 'public';
 
-SELECT relname, relrowsecurity 
-FROM pg_class 
+SELECT relname, relrowsecurity
+FROM pg_class
 WHERE relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND relkind = 'r';
 
-SELECT tablename, policyname, permissive, roles, cmd, qual, with_check 
-FROM pg_policies 
+SELECT tablename, policyname, permissive, roles, cmd, qual, with_check
+FROM pg_policies
 WHERE schemaname = 'public';
 
 SELECT id, name, public FROM storage.buckets;
 
-SELECT tablename, policyname, cmd, qual, with_check 
-FROM pg_policies 
+SELECT tablename, policyname, cmd, qual, with_check
+FROM pg_policies
 WHERE schemaname = 'storage';
+$$

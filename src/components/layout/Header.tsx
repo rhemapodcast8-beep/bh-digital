@@ -65,7 +65,7 @@ export function Header() {
   const handleLogout = async () => {
     const supabase = createSupabaseBrowserClient();
     await supabase.auth.signOut();
-    router.refresh();
+    window.location.href = '/';
   };
 
   useEffect(() => {

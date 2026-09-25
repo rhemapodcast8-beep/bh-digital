@@ -27,11 +27,10 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError('Não foi possível entrar. Verifique seu e-mail e senha.');
+      setError(error.message || 'Não foi possível entrar. Verifique seu e-mail e senha.');
       setLoading(false);
     } else {
-      router.push('/perfil'); // ou para o conteúdo, como '/'
-      router.refresh();
+      window.location.href = '/perfil';
     }
   };
 

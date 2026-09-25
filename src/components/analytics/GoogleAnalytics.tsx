@@ -35,9 +35,8 @@ export function GoogleAnalytics() {
       />
 
       {/* 2. Inicializa o gtag com configuracoes de privacidade */}
-      <Script
+      <script
         id="ga4-init"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: initScript }}
       />
     </>

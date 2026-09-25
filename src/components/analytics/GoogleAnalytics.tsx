@@ -12,10 +12,7 @@ import Script from 'next/script';
  * Nao coleta PII. A anonimizacao de IP e padrao no GA4.
  */
 export function GoogleAnalytics() {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
-  // Se a variavel nao estiver configurada, nao injeta nada.
-  if (!measurementId) return null;
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-ORNEK4PZCS';
 
   const initScript = [
     'window.dataLayer = window.dataLayer || [];',

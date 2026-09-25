@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
@@ -36,21 +36,33 @@ export function trackEvent(
  */
 export function RouteTracker() {
   const pathname = usePathname();
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-ORNEK4PZCS';
   const prevPathnameRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // Aguarda o gtag estar disponível antes de enviar o evento
-    if (!measurementId || typeof window.gtag !== 'function') return;
+    if (!measurementId) return;
+
+    // Resolve a race condition garantindo que gtag existe na janela (como fila do dataLayer)
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      if (typeof window.gtag !== 'function') {
+        window.gtag = function gtag() {
+          window.dataLayer.push(arguments);
+        };
+      }
+    }
+
     // Evita duplicar o event na mesma rota
     if (prevPathnameRef.current === pathname) return;
-
     prevPathnameRef.current = pathname;
 
-    window.gtag('event', 'page_view', {
-      page_path: pathname,
-      page_location: window.location.href,
-    });
+    // Usa setTimeout para garantir que o React atualizou o document.title após a mudança de rota
+    setTimeout(() => {
+      window.gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: window.location.href,
+      });
+    }, 100);
   }, [pathname, measurementId]);
 
   return null;

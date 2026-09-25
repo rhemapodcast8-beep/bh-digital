@@ -28,17 +28,22 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   // Rotas protegidas que exigem autenticação
   const protectedRoutes = ['/perfil', '/admin'];
   const isProtectedRoute = protectedRoutes.some((r) =>
     request.nextUrl.pathname.startsWith(r)
   );
 
-  if (isProtectedRoute && !user) {
+  // Early return para rotas públicas, evitando chamada de rede (previne 504 Timeout)
+  if (!isProtectedRoute) {
+    return supabaseResponse;
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/login';
     url.searchParams.set('redirectTo', request.nextUrl.pathname);

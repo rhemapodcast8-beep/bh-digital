@@ -70,7 +70,7 @@ export function MateriaisClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060B16] text-slate-100 pb-24">
+    <div className="min-h-screen text-slate-100 pb-24">
       
       {/* Toast Notification */}
       {downloadSuccessToast && (

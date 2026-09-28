@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { BibliaClient } from './BibliaClient';
+import { PremiumPageBackground } from '@/components/ui/PremiumPageBackground';
 
 export const metadata: Metadata = {
   title: 'Bíblia Online',
@@ -7,5 +8,12 @@ export const metadata: Metadata = {
 };
 
 export default function BibliaPage() {
-  return <BibliaClient />;
+  return (
+    <>
+      <PremiumPageBackground variant="default" />
+      <div className="page-content">
+        <BibliaClient />
+      </div>
+    </>
+  );
 }

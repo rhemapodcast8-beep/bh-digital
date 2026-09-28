@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { AnimatedHeroBackground } from '@/components/ui/AnimatedHeroBackground';
 import {
   Download,
   BookOpen,
@@ -64,12 +65,12 @@ export default function HomePage() {
         {/* ================================================================ */}
         {/* 1. HERO                                                          */}
         {/* ================================================================ */}
-        <section id="hero" className="relative pt-6 sm:pt-12 pb-8 sm:pb-12 overflow-hidden">
-          {/* Glows */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-radial from-[#1E3A8A]/25 via-[#080E1B]/80 to-transparent blur-3xl -z-10 pointer-events-none" />
-          <div className="absolute top-24 right-12 w-[380px] h-[380px] bg-[#D4AF37]/5 rounded-full blur-3xl -z-10 pointer-events-none" />
+        <section id="hero" className="relative pt-6 sm:pt-12 pb-8 sm:pb-12 overflow-hidden isolate">
+          {/* ── Cinematic animated background ── */}
+          <AnimatedHeroBackground />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Content: must stay above background (z-index 10) */}
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ zIndex: 10 }}>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
               {/* Texto */}
@@ -129,7 +130,16 @@ export default function HomePage() {
                 <div
                   className="relative group cursor-pointer"
                   onClick={() => setIsAppModalOpen(true)}
+                  style={{ animation: 'heroFloat 6s ease-in-out infinite' }}
                 >
+                  {/* Outer glow ring — animated */}
+                  <div className="absolute -inset-6 rounded-[52px] pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(ellipse 80% 90% at 50% 50%, rgba(212,175,55,0.12) 0%, rgba(30,58,138,0.1) 60%, transparent 100%)',
+                      filter: 'blur(20px)',
+                      animation: 'glowPulse 6s ease-in-out infinite',
+                    }}
+                  />
                   <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-[#D4AF37]/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all opacity-80" />
                   {/* Smartphone mockup simplificado */}
                   <div className="relative w-[280px] sm:w-[300px] rounded-[44px] p-3 bg-gradient-to-b from-[#334155] via-[#1E293B] to-[#0F172A] shadow-2xl border border-slate-700/60">

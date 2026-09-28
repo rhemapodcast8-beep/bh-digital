@@ -88,17 +88,37 @@ export function Header() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'bg-[#070D18]/95 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-slate-800/80'
-          : 'bg-[#070D18]/80 backdrop-blur-md border-b border-slate-800/50'
+          ? 'bg-[#070D18]/96 backdrop-blur-2xl shadow-xl shadow-black/30'
+          : 'bg-[#070D18]/82 backdrop-blur-xl'
       }`}
+      style={{
+        borderBottom: scrolled
+          ? '1px solid rgba(212,175,55,0.12)'
+          : '1px solid rgba(30,58,138,0.25)',
+        boxShadow: scrolled
+          ? '0 1px 0 rgba(212,175,55,0.06), 0 4px 24px rgba(0,0,0,0.35)'
+          : 'none',
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
 
           {/* Logo Brand */}
           <Link href="/" className="flex items-center gap-3 cursor-pointer group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E3A8A] to-[#0A1124] border border-[#D4AF37]/40 flex items-center justify-center shadow-lg shadow-blue-950/50 group-hover:border-[#E5C05B] transition-all">
-              <span className="text-[#E5C05B] font-bold text-base tracking-wider font-mono">BH</span>
+            <div
+              className="relative w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, #1E3A8A, #0A1124)',
+                border: '1px solid rgba(212,175,55,0.35)',
+                boxShadow: '0 0 0 0 rgba(212,175,55,0)',
+              }}
+            >
+              {/* Glow ring on hover */}
+              <div
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ boxShadow: '0 0 12px rgba(212,175,55,0.25), 0 0 0 1px rgba(212,175,55,0.5)' }}
+              />
+              <span className="text-[#E5C05B] font-bold text-base tracking-wider font-mono relative z-10">BH</span>
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
@@ -123,15 +143,23 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all relative ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative group/nav ${
                     active
-                      ? 'text-white bg-slate-800/70 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                      ? 'text-white'
+                      : 'text-slate-400 hover:text-white'
                   }`}
+                  style={active ? {
+                    background: 'rgba(30,58,138,0.25)',
+                    boxShadow: 'inset 0 1px 0 rgba(212,175,55,0.08)',
+                  } : {}}
                 >
                   <span>{item.label}</span>
-                  {active && (
-                    <span className="absolute bottom-1 left-3.5 right-3.5 h-0.5 bg-[#D4AF37] rounded-full" />
+                  {/* Active: animated gold bar */}
+                  {active ? (
+                    <span className="nav-link-active-bar" />
+                  ) : (
+                    /* Hover: subtle blue underline */
+                    <span className="absolute bottom-1 left-3.5 right-3.5 h-0.5 rounded-full bg-slate-600/0 group-hover/nav:bg-slate-600/60 transition-all duration-200" />
                   )}
                 </Link>
               );

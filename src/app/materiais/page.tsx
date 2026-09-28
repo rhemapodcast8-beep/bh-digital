@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { MateriaisClient } from './MateriaisClient';
+import { PremiumPageBackground } from '@/components/ui/PremiumPageBackground';
 
 export const metadata: Metadata = {
   title: 'Materiais Bíblicos e Pedagógicos',
@@ -9,8 +10,13 @@ export const metadata: Metadata = {
 
 export default function MateriaisPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#060B16]" />}>
-      <MateriaisClient />
-    </Suspense>
+    <>
+      <PremiumPageBackground variant="materiais" />
+      <div className="page-content">
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <MateriaisClient />
+        </Suspense>
+      </div>
+    </>
   );
 }

@@ -83,3 +83,164 @@
   backdrop-filter: blur(12px);
   border: 1px solid rgba(30, 58, 138, 0.25);
 }
+
+/* ── Cinematic Hero Background Animations ──────────────────────────────── */
+
+/* Slow zoom on the Bible image */
+@keyframes bibleSlowZoom {
+  0%   { transform: scale(1.00) translateX(0px) translateY(0px); }
+  33%  { transform: scale(1.04) translateX(-6px) translateY(-3px); }
+  66%  { transform: scale(1.06) translateX(4px) translateY(5px); }
+  100% { transform: scale(1.03) translateX(-2px) translateY(-4px); }
+}
+
+/* Golden glow pulse */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+/* Bible layer subtle drift */
+@keyframes bibleDrift {
+  0%   { transform: translateY(0px)  translateX(0px) rotate(-1.5deg); }
+  50%  { transform: translateY(-12px) translateX(5px) rotate(-0.5deg); }
+  100% { transform: translateY(-6px)  translateX(-4px) rotate(-2deg); }
+}
+
+/* Light ray slow rotation */
+@keyframes lightRayDrift {
+  from { transform: translateX(-50%) rotate(0deg); opacity: 0.6; }
+  50%  { opacity: 1; }
+  to   { transform: translateX(-50%) rotate(360deg); opacity: 0.6; }
+}
+
+/* Gold border shimmer */
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+/* Subtle floating for hero content elements */
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-float { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BH DIGITAL — GLOBAL DESIGN SYSTEM
+   Premium cards, hover microinteractions, and system utilities
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Premium Card — base system for all content cards */
+.premium-card {
+  background: rgba(8, 14, 27, 0.80);
+  border: 1px solid rgba(30, 58, 138, 0.25);
+  border-radius: 1rem;
+  transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease, background 220ms ease;
+  will-change: transform, box-shadow;
+}
+.premium-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: rgba(8, 14, 27, 0.92);
+  box-shadow: 0 0 0 1px rgba(212,175,55,0.08), 0 8px 32px rgba(0,0,0,0.35), 0 0 20px rgba(212,175,55,0.06);
+  transform: translateY(-2px);
+}
+
+/* Page background z-context */
+.page-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Gold shimmer text */
+.text-gold-shimmer {
+  background: linear-gradient(90deg, #C59B27, #E5C05B, #D4AF37, #F5D76E, #D4AF37, #C59B27);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 4s linear infinite;
+}
+@keyframes goldShimmer {
+  to { background-position: 200% center; }
+}
+
+/* Glow badge */
+.glow-badge {
+  position: relative;
+}
+.glow-badge::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(30,58,138,0.2));
+  filter: blur(6px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.glow-badge:hover::after {
+  opacity: 1;
+}
+
+/* Category filter pills */
+.filter-pill {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid rgba(30, 58, 138, 0.3);
+  background: rgba(8, 14, 27, 0.7);
+  color: rgb(148, 163, 184);
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+.filter-pill:hover {
+  border-color: rgba(212,175,55,0.4);
+  color: #fff;
+  background: rgba(8, 14, 27, 0.9);
+}
+.filter-pill.active {
+  border-color: rgba(212,175,55,0.6);
+  background: rgba(212,175,55,0.12);
+  color: #E5C05B;
+}
+
+/* Subtle divider line with gold center */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 30%, rgba(212,175,55,0.35) 50%, rgba(212,175,55,0.15) 70%, transparent 100%);
+}
+
+/* Header nav link active underline animation */
+.nav-link-active-bar {
+  position: absolute;
+  bottom: 2px;
+  left: 0.875rem;
+  right: 0.875rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #C59B27, #E5C05B, #D4AF37);
+  background-size: 200% auto;
+  animation: goldShimmer 3s linear infinite;
+}
+
+/* Reduce-motion: disable all custom animations */
+@media (prefers-reduced-motion: reduce) {
+  .text-gold-shimmer,
+  .nav-link-active-bar {
+    animation: none !important;
+    background-position: 0 center !important;
+  }
+  .premium-card,
+  .premium-card:hover {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+

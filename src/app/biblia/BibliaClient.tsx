@@ -9,6 +9,7 @@ import {
 import { LivroBiblico } from '@/types';
 import { LIVROS_BIBLICOS } from '@/lib/mockData';
 import bibliaDataRaw from '@/lib/data/biblia_full.json';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 const bibliaData = bibliaDataRaw as Record<string, Record<string, { numero: number; texto: string }[]>>;
 
@@ -32,6 +33,7 @@ export type SearchResult = {
 
 export function BibliaClient() {
   const router = useRouter();
+  const { t, localizePath } = useI18n();
 
   const [testamento, setTestamento] = useState<'Antigo' | 'Novo'>('Antigo');
   const [livroSelecionado, setLivroSelecionado] = useState<LivroBiblico>(LIVROS_BIBLICOS[0]);
@@ -94,7 +96,7 @@ export function BibliaClient() {
   }, [favoritos]);
   
   const updateUrl = (bookId: string, cap: number) => {
-    const newUrl = `/biblia?livro=${bookId}&capitulo=${cap}`;
+    const newUrl = `${localizePath('/biblia')}?livro=${bookId}&capitulo=${cap}`;
     window.history.replaceState(null, '', newUrl);
   };
 
@@ -314,9 +316,9 @@ export function BibliaClient() {
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-400">
-        <Link href="/" className="hover:text-white transition-colors">Início</Link>
+        <Link href={localizePath('/')} className="hover:text-white transition-colors">{t.nav.inicio}</Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-[#E5C05B] font-semibold">Bíblia Online</span>
+        <span className="text-[#E5C05B] font-semibold">{t.biblia.pageTitle}</span>
       </nav>
 
       {/* Toast Notification */}
@@ -332,13 +334,13 @@ export function BibliaClient() {
         <div>
           <div className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] flex items-center gap-1.5">
             <BookOpen className="w-4 h-4" />
-            <span>Leitor Digital Interativo Integral</span>
+            <span>{t.home.bibleBadge}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">
-            Bíblia Online BH
+            {t.biblia.pageTitle}
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Texto bíblico completo (66 livros). Baseado na tradição da versão João Ferreira de Almeida — edição histórica de domínio público.
+            {t.biblia.pageDesc}
           </p>
         </div>
 
@@ -351,7 +353,7 @@ export function BibliaClient() {
             className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C59B27] hover:from-[#E5C05B] hover:to-[#D4AF37] text-slate-950 font-bold text-xs flex items-center gap-2 shadow-md transition-all"
           >
             <Smartphone className="w-4 h-4" />
-            <span>Baixar App Completo</span>
+            <span>{t.home.bibleBtnDownloadApp}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -361,7 +363,7 @@ export function BibliaClient() {
       <div className="p-4 rounded-2xl bg-slate-900/90 border border-blue-900/50 flex items-start gap-3">
         <Info className="w-5 h-5 text-[#E5C05B] flex-shrink-0 mt-0.5" />
         <div className="text-xs text-slate-300 leading-relaxed">
-          <strong className="text-white font-semibold">Tradução Bíblica:</strong> João Ferreira de Almeida Revista e Corrigida (Domínio Público). Texto integral de 66 livros disponível para leitura e estudo no BH Digital.
+          <strong className="text-white font-semibold">{t.biblia.readingMode}:</strong> João Ferreira de Almeida (Almeida). Texto integral de 66 livros disponível para leitura e estudo no BH Digital.
         </div>
       </div>
 
@@ -387,7 +389,7 @@ export function BibliaClient() {
                   : 'text-slate-400 hover:text-white'
                 }`}
             >
-              Antigo Testamento (39)
+              {t.biblia.oldTestament} (39)
             </button>
             <button
               onClick={() => {
@@ -403,7 +405,7 @@ export function BibliaClient() {
                   : 'text-slate-400 hover:text-white'
                 }`}
             >
-              Novo Testamento (27)
+              {t.biblia.newTestament} (27)
             </button>
           </div>
 
@@ -589,7 +591,7 @@ export function BibliaClient() {
                   }`}
               >
                 {isPlayingAudio ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-                <span>{isPlayingAudio ? 'Parar Áudio' : 'Ouvir Capítulo'}</span>
+                <span>{isPlayingAudio ? t.biblia.stopAudio : t.biblia.playAudio}</span>
               </button>
 
               <div className="flex items-center rounded-xl bg-slate-900 border border-slate-800 p-0.5 text-xs">

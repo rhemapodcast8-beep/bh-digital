@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ApoioModal } from '@/components/ui/ApoioModal';
+import { useI18n } from '@/lib/i18n/I18nContext';
 import {
   BookOpen,
   Sparkles,
@@ -16,6 +17,7 @@ import {
 
 export function Footer() {
   const [isApoioModalOpen, setIsApoioModalOpen] = useState(false);
+  const { t, localizePath } = useI18n();
 
   return (
     <footer className="bg-[#040812] border-t border-slate-800/80 text-slate-300">
@@ -30,7 +32,7 @@ export function Footer() {
             <div>
               <h3 className="text-xl font-extrabold text-white tracking-tight">BH DIGITAL</h3>
               <p className="text-sm text-slate-400">
-                Palavra • Estudos • Livros • Ferramentas — Um ecossistema digital para edificação cristã.
+                {t.footer.mission}
               </p>
             </div>
           </div>
@@ -43,13 +45,13 @@ export function Footer() {
               className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2 transition-all hover:border-[#D4AF37]/60"
             >
               <Smartphone className="w-4 h-4 text-[#E5C05B]" />
-              <span>Bíblia Sagrada BH (Google Play)</span>
+              <span>{t.footer.appBadge}</span>
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </a>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
-              title="Voltar ao topo"
+              title={t.footer.backToTop}
             >
               <ArrowUp className="w-4 h-4" />
             </button>
@@ -63,30 +65,30 @@ export function Footer() {
 
           {/* Col 1: BH DIGITAL */}
           <div className="col-span-2 md:col-span-2 lg:col-span-1 space-y-3">
-            <h4 className="font-bold text-[#D4AF37] tracking-wider text-xs uppercase">BH DIGITAL</h4>
+            <h4 className="font-bold text-[#D4AF37] tracking-wider text-xs uppercase">{t.footer.aboutTitle}</h4>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Plataforma digital profissional integrando conteúdos bíblicos, literatura, aplicativos e ferramentas tecnológicas.
+              {t.footer.aboutText}
             </p>
             <div className="pt-2 text-xs text-slate-400 space-y-1">
-              <div className="font-semibold text-slate-300">Versão:</div>
+              <div className="font-semibold text-slate-300">{t.footer.versionLabel}</div>
               <div className="font-mono text-[11px] text-[#E5C05B]">v2.0 • Next.js + Supabase</div>
             </div>
           </div>
 
           {/* Col 2: Estudos */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white tracking-wider text-xs uppercase">Estudos</h4>
+            <h4 className="font-bold text-white tracking-wider text-xs uppercase">{t.footer.studiesTitle}</h4>
             <ul className="space-y-2 text-xs text-slate-400">
               {[
-                { label: 'Todos os Estudos', href: '/estudos' },
-                { label: 'Esboços de Pregação', href: '/estudos/esbocos' },
-                { label: 'Estudos Bíblicos', href: '/estudos/estudos-biblicos' },
-                { label: 'Personagens', href: '/estudos/personagens' },
-                { label: 'Parábolas', href: '/estudos/parabolas' },
-                { label: 'Fé e Oração', href: '/estudos/fe' },
+                { label: t.estudos.filterAll, href: '/estudos' },
+                { label: t.estudos.filterEsbocos, href: '/estudos/esbocos' },
+                { label: t.estudos.filterBiblicos, href: '/estudos/estudos-biblicos' },
+                { label: t.estudos.filterPersonagens, href: '/estudos/personagens' },
+                { label: t.estudos.filterParabolas, href: '/estudos/parabolas' },
+                { label: t.estudos.filterFe, href: '/estudos/fe' },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-white transition-colors">
+                  <Link href={localizePath(link.href)} className="hover:text-white transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -96,16 +98,16 @@ export function Footer() {
 
           {/* Col 3: Devocionais */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white tracking-wider text-xs uppercase">Devocionais</h4>
+            <h4 className="font-bold text-white tracking-wider text-xs uppercase">{t.footer.devotionalsTitle}</h4>
             <ul className="space-y-2 text-xs text-slate-400">
               {[
-                { label: 'Devocional de Hoje', href: '/devocionais' },
-                { label: 'Palavra Diária', href: '/devocionais' },
-                { label: 'Lições Bíblicas', href: '/licoes' },
-                { label: 'Leitura Bíblica', href: '/biblia' },
+                { label: t.devocionais.todayDevotional, href: '/devocionais' },
+                { label: t.nav.devocionais, href: '/devocionais' },
+                { label: t.nav.licoesAdultos, href: '/licoes' },
+                { label: t.nav.biblia, href: '/biblia' },
               ].map((link, i) => (
                 <li key={i}>
-                  <Link href={link.href} className="hover:text-white transition-colors">
+                  <Link href={localizePath(link.href)} className="hover:text-white transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -115,16 +117,16 @@ export function Footer() {
 
           {/* Col 4: Livros */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white tracking-wider text-xs uppercase">Livros</h4>
+            <h4 className="font-bold text-white tracking-wider text-xs uppercase">{t.footer.booksTitle}</h4>
             <ul className="space-y-2 text-xs text-slate-400">
               <li>
-                <Link href="/livros" className="hover:text-white transition-colors">
-                  Catálogo de Livros
+                <Link href={localizePath('/livros')} className="hover:text-white transition-colors">
+                  {t.livros.pageTitle}
                 </Link>
               </li>
               <li>
-                <Link href="/livros" className="hover:text-[#E5C05B] font-medium transition-colors">
-                  Quando Deus Soprar
+                <Link href={localizePath('/livros')} className="hover:text-[#E5C05B] font-medium transition-colors">
+                  Quando Deus Sopra
                 </Link>
               </li>
               <li>
@@ -134,7 +136,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-white flex items-center gap-1"
                 >
-                  Amazon Brasil <ExternalLink className="w-2.5 h-2.5" />
+                  Amazon <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               </li>
               <li>
@@ -144,7 +146,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-white flex items-center gap-1"
                 >
-                  UICLAP Loja <ExternalLink className="w-2.5 h-2.5" />
+                  UICLAP <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               </li>
             </ul>
@@ -152,7 +154,7 @@ export function Footer() {
 
           {/* Col 5: Aplicativos */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white tracking-wider text-xs uppercase">Aplicativos</h4>
+            <h4 className="font-bold text-white tracking-wider text-xs uppercase">{t.home.appCardBadge}</h4>
             <ul className="space-y-2 text-xs text-slate-400">
               <li>
                 <a
@@ -166,28 +168,28 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <Link href="/biblia" className="hover:text-white transition-colors">
-                  Bíblia Online Web
+                <Link href={localizePath('/biblia')} className="hover:text-white transition-colors">
+                  {t.nav.biblia}
                 </Link>
               </li>
               <li>
-                <span className="text-slate-500 text-[11px]">Versão Android disponível</span>
+                <span className="text-slate-500 text-[11px]">{t.home.appCardSubtitle}</span>
               </li>
             </ul>
           </div>
 
           {/* Col 6: Ferramentas */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white tracking-wider text-xs uppercase">Ferramentas</h4>
+            <h4 className="font-bold text-white tracking-wider text-xs uppercase">{t.footer.toolsTitle}</h4>
             <ul className="space-y-2 text-xs text-slate-400">
               {[
                 { label: 'ESTUDA-FÁCIL', href: '/ferramentas' },
                 { label: 'WIPE CRM', href: '/ferramentas' },
-                { label: 'Biblioteca Premium', href: '/premium' },
-                { label: 'Materiais Digitais', href: '/materiais' },
+                { label: t.nav.premium, href: '/premium' },
+                { label: t.nav.materiais, href: '/materiais' },
               ].map((link) => (
                 <li key={link.href + link.label}>
-                  <Link href={link.href} className="hover:text-[#E5C05B] transition-colors">
+                  <Link href={localizePath(link.href)} className="hover:text-[#E5C05B] transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -197,25 +199,25 @@ export function Footer() {
 
           {/* Col 7: Suporte */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white tracking-wider text-xs uppercase">Suporte</h4>
+            <h4 className="font-bold text-white tracking-wider text-xs uppercase">{t.footer.legalTitle}</h4>
             <ul className="space-y-2 text-xs text-slate-400">
               <li>
-                <Link href="/contato" className="hover:text-white transition-colors">
-                  Contato & Dúvidas
+                <Link href={localizePath('/contato')} className="hover:text-white transition-colors">
+                  {t.footer.contactLink}
                 </Link>
               </li>
               <li>
-                <Link href="/privacidade" className="hover:text-white transition-colors">
-                  Política de Privacidade
+                <Link href={localizePath('/privacidade')} className="hover:text-white transition-colors">
+                  {t.footer.privacyLink}
                 </Link>
               </li>
               <li>
-                <Link href="/termos" className="hover:text-white transition-colors">
-                  Termos de Uso
+                <Link href={localizePath('/termos')} className="hover:text-white transition-colors">
+                  {t.footer.termsLink}
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="text-slate-500 hover:text-slate-300 flex items-center gap-1">
+                <Link href={localizePath('/admin')} className="text-slate-500 hover:text-slate-300 flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Painel Admin</span>
                 </Link>
@@ -225,7 +227,7 @@ export function Footer() {
                   onClick={() => setIsApoioModalOpen(true)}
                   className="text-xs bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#E5C05B] border border-[#D4AF37]/30 px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1"
                 >
-                  Apoie o BH DIGITAL
+                  {t.footer.supportProject}
                 </button>
               </li>
             </ul>
@@ -258,7 +260,7 @@ export function Footer() {
           <div className="text-xs text-slate-500 text-center sm:text-right">
             <span>© {new Date().getFullYear()} </span>
             <strong className="text-slate-300 font-semibold">BH DIGITAL</strong>
-            <span>. Todos os direitos reservados.</span>
+            <span>. {t.footer.allRightsReserved}</span>
           </div>
         </div>
       </div>

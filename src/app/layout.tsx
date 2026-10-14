@@ -5,6 +5,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { RouteTracker } from '@/components/analytics/RouteTracker';
+import { I18nProvider } from '@/lib/i18n/I18nContext';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -14,6 +15,16 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bhdigitaltech.com'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'pt-BR': '/',
+      'en': '/en',
+      'es': '/es',
+      'x-default': '/',
+    },
+  },
   title: {
     default: 'BH DIGITAL — Palavra, Estudos, Livros e Ferramentas',
     template: '%s | BH DIGITAL',
@@ -53,25 +64,27 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={plusJakartaSans.variable}>
       <body className="min-h-screen flex flex-col bg-[#060B16] text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-slate-950 antialiased">
-        {/* GA4: rastreamento de visitantes e page views */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-0RNEK4PZCS"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-0RNEK4PZCS', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
-        <RouteTracker />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <I18nProvider>
+          {/* GA4: rastreamento de visitantes e page views */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-0RNEK4PZCS"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-0RNEK4PZCS', {
+                page_path: window.location.pathname,
+              });
+            `}
+          </Script>
+          <RouteTracker />
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   );

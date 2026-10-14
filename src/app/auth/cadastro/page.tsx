@@ -4,8 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff, UserPlus, BookOpen, Check } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 export default function CadastroPage() {
+  const { t, localizePath } = useI18n();
+
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -22,12 +25,12 @@ export default function CadastroPage() {
     setError('');
 
     if (senha !== confirmarSenha) {
-      setError('As senhas não coincidem.');
+      setError(t.auth.passwordsDontMatch);
       return;
     }
 
     if (senha.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres.');
+      setError(t.auth.passwordTooShort);
       return;
     }
 
@@ -45,7 +48,7 @@ export default function CadastroPage() {
     });
 
     if (error) {
-      setError(error.message || 'Erro ao criar conta. Verifique os dados fornecidos.');
+      setError(error.message || t.auth.signupError);
       setLoading(false);
     } else {
       setSuccess(true);
@@ -62,8 +65,8 @@ export default function CadastroPage() {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-[#1E3A8A] to-[#0A1124] border border-[#D4AF37]/50 flex items-center justify-center shadow-xl">
             <span className="text-[#E5C05B] font-extrabold text-2xl">BH</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Criar Conta Gratuita</h1>
-          <p className="text-sm text-slate-400">Junte-se à comunidade BH DIGITAL e acesse todos os conteúdos.</p>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">{t.auth.signupTitle}</h1>
+          <p className="text-sm text-slate-400">{t.auth.signupSubtitle}</p>
         </div>
 
         {/* Card */}
@@ -73,22 +76,22 @@ export default function CadastroPage() {
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 mx-auto flex items-center justify-center">
                 <Check className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-white">Cadastro Realizado com Sucesso!</h3>
+              <h3 className="text-lg font-bold text-white">{t.auth.signupSuccessTitle}</h3>
               <p className="text-xs text-slate-300">
-                Sua conta foi criada. Você já pode fazer login para acessar seus favoritos e preferências.
+                {t.auth.signupSuccessDesc}
               </p>
               <Link
-                href="/auth/login"
+                href={localizePath('/auth/login')}
                 className="inline-block w-full py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C59B27] text-slate-950 font-bold text-xs uppercase shadow-md"
               >
-                Ir para o Login
+                {t.auth.btnGoToLogin}
               </Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
                 <label htmlFor="nome-cadastro" className="text-xs font-semibold text-slate-300 block">
-                  Nome Completo
+                  {t.auth.fullName}
                 </label>
                 <input
                   id="nome-cadastro"
@@ -96,14 +99,14 @@ export default function CadastroPage() {
                   required
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  placeholder="Seu nome completo..."
+                  placeholder={t.auth.fullNamePlaceholder}
                   className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label htmlFor="email-cadastro" className="text-xs font-semibold text-slate-300 block">
-                  E-mail
+                  {t.auth.email}
                 </label>
                 <input
                   id="email-cadastro"
@@ -111,14 +114,14 @@ export default function CadastroPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
+                  placeholder={t.auth.emailPlaceholder}
                   className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label htmlFor="senha-cadastro" className="text-xs font-semibold text-slate-300 block">
-                  Senha
+                  {t.auth.password}
                 </label>
                 <div className="relative">
                   <input
@@ -127,7 +130,7 @@ export default function CadastroPage() {
                     required
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
-                    placeholder="Mínimo 6 caracteres..."
+                    placeholder={t.auth.passwordPlaceholder}
                     className="w-full px-4 py-3 pr-11 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                   />
                   <button
@@ -143,7 +146,7 @@ export default function CadastroPage() {
 
               <div className="space-y-1.5">
                 <label htmlFor="confirmar-senha" className="text-xs font-semibold text-slate-300 block">
-                  Confirmar Senha
+                  {t.auth.confirmPassword}
                 </label>
                 <input
                   id="confirmar-senha"
@@ -151,7 +154,7 @@ export default function CadastroPage() {
                   required
                   value={confirmarSenha}
                   onChange={(e) => setConfirmarSenha(e.target.value)}
-                  placeholder="Repita a senha..."
+                  placeholder={t.auth.confirmPasswordPlaceholder}
                   className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                 />
               </div>
@@ -168,11 +171,11 @@ export default function CadastroPage() {
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C59B27] hover:from-[#E5C05B] hover:to-[#D4AF37] text-slate-950 font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed mt-2"
               >
                 {loading ? (
-                  <span className="animate-pulse">Criando conta...</span>
+                  <span className="animate-pulse">{t.nav.loading}</span>
                 ) : (
                   <>
                     <UserPlus className="w-4 h-4" />
-                    <span>CRIAR MINHA CONTA</span>
+                    <span>{t.auth.btnSignup}</span>
                   </>
                 )}
               </button>
@@ -181,17 +184,17 @@ export default function CadastroPage() {
 
           <div className="pt-4 border-t border-slate-800 text-center space-y-3">
             <p className="text-xs text-slate-400">
-              Já tem uma conta?{' '}
-              <Link href="/auth/login" className="text-[#E5C05B] font-semibold hover:text-white transition-colors">
-                Fazer login
+              {t.auth.alreadyHaveAccount}{' '}
+              <Link href={localizePath('/auth/login')} className="text-[#E5C05B] font-semibold hover:text-white transition-colors">
+                {t.auth.linkLogin}
               </Link>
             </p>
             <Link
-              href="/"
+              href={localizePath('/')}
               className="text-xs text-slate-500 hover:text-slate-300 flex items-center justify-center gap-1.5 transition-colors"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>Voltar para a plataforma</span>
+              <span>{t.nav.backToHome}</span>
             </Link>
           </div>
         </div>

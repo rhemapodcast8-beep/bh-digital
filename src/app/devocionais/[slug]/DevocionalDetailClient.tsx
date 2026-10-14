@@ -17,6 +17,7 @@ import {
   Coffee
 } from 'lucide-react';
 import { DevocionalItem } from '@/types';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 interface NavigationItem {
   slug: string;
@@ -29,17 +30,18 @@ interface Props {
   proximo: NavigationItem | null;
 }
 
-function formatDatePtBR(dateString: string) {
+function formatDateLocale(dateString: string, locale: string) {
   if (!dateString) return '';
   const [year, month, day] = dateString.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   
-  return new Intl.DateTimeFormat('pt-BR', { 
-    dateStyle: 'full' 
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'full'
   }).format(date);
 }
 
 export function DevocionalDetailClient({ devocional, anterior, proximo }: Props) {
+  const { t, locale, localizePath } = useI18n();
   const [isFavorited, setIsFavorited] = useState(false);
   const [copied, setCopied] = useState(false);
   const [fontSize, setFontSize] = useState<'normal' | 'large'>('normal');
@@ -57,20 +59,24 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-400 flex-wrap">
-        <Link href="/" className="hover:text-white transition-colors">Início</Link>
+        <Link href={localizePath('/')} className="hover:text-white transition-colors">
+          {t.nav?.inicio || 'Início'}
+        </Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <Link href="/devocionais" className="hover:text-white transition-colors">Devocionais</Link>
+        <Link href={localizePath('/devocionais')} className="hover:text-white transition-colors">
+          {t.nav?.devocionais || 'Devocionais'}
+        </Link>
         <ChevronRight className="w-3.5 h-3.5" />
         <span className="text-[#E5C05B] font-semibold truncate max-w-[200px]">{devocional.titulo}</span>
       </nav>
 
       {/* Back Button */}
       <Link
-        href="/devocionais"
+        href={localizePath('/devocionais')}
         className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Voltar para devocionais</span>
+        <span>{t.nav?.back || 'Voltar'}</span>
       </Link>
 
       {/* Header Container */}
@@ -88,11 +94,11 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
         <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
           <div className="flex items-center gap-1.5 capitalize">
             <Calendar className="w-3.5 h-3.5" />
-            <span>{formatDatePtBR(devocional.data)}</span>
+            <span>{formatDateLocale(devocional.data, locale === 'en' ? 'en-US' : locale === 'es' ? 'es-ES' : 'pt-BR')}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5" />
-            <span>{devocional.tempoLeitura} de leitura</span>
+            <span>{devocional.tempoLeitura} {t.devocionais?.readingTime || 'de leitura'}</span>
           </div>
         </div>
       </div>
@@ -115,7 +121,7 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-colors"
         >
           <span className="font-serif font-bold text-sm">Aa</span>
-          Tamanho da Fonte
+          {locale === 'en' ? 'Font Size' : locale === 'es' ? 'Tamaño de Fuente' : 'Tamanho da Fonte'}
         </button>
 
         <div className="flex items-center gap-2">
@@ -150,7 +156,7 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
         <section className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
             <Target className="w-5 h-5 text-indigo-400" />
-            Aplicação Diária
+            {locale === 'en' ? 'Daily Application' : locale === 'es' ? 'Aplicación Diaria' : 'Aplicação Diária'}
           </h3>
           <p>{devocional.aplicacao}</p>
         </section>
@@ -159,7 +165,7 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
         <section className="p-6 rounded-2xl bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-900/50 space-y-4">
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
             <Coffee className="w-5 h-5 text-emerald-400" />
-            Desafio do Dia
+            {locale === 'en' ? 'Daily Challenge' : locale === 'es' ? 'Desafío del Día' : 'Desafio do Dia'}
           </h3>
           <p className="text-emerald-100/80 italic">{devocional.desafioDoDia}</p>
         </section>
@@ -167,7 +173,7 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
         {/* Pergunta para Reflexão */}
         <section className="text-center py-6">
           <h3 className="text-sm font-bold text-[#E5C05B] uppercase tracking-widest mb-3">
-            Para Refletir
+            {locale === 'en' ? 'To Reflect' : locale === 'es' ? 'Para Reflexionar' : 'Para Refletir'}
           </h3>
           <p className="text-xl text-white font-serif italic">
             "{devocional.perguntaReflexao}"
@@ -177,7 +183,9 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
         {/* Oração Final */}
         <section className="p-6 rounded-2xl bg-[#080E1B] border border-slate-800/60 text-center space-y-4">
           <HeartHandshake className="w-6 h-6 text-rose-500 mx-auto" />
-          <h3 className="text-lg font-bold text-white">Oração</h3>
+          <h3 className="text-lg font-bold text-white">
+            {locale === 'en' ? 'Prayer' : locale === 'es' ? 'Oración' : 'Oração'}
+          </h3>
           <p className="italic text-slate-400 max-w-lg mx-auto">
             {devocional.oracao}
           </p>
@@ -189,14 +197,16 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-slate-800 mt-8">
         {anterior ? (
           <Link
-            href={`/devocionais/${anterior.slug}`}
+            href={localizePath(`/devocionais/${anterior.slug}`)}
             className="flex items-center gap-3 p-4 rounded-xl border border-slate-800 hover:border-slate-600 bg-slate-900/50 hover:bg-slate-900 transition-colors group"
           >
             <div className="p-2 rounded-full bg-slate-800 group-hover:bg-indigo-500/20 text-slate-400 group-hover:text-indigo-400 transition-colors">
               <ChevronLeft className="w-5 h-5" />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Devocional Anterior</span>
+              <span className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
+                {locale === 'en' ? 'Previous Devotional' : locale === 'es' ? 'Devocional Anterior' : 'Devocional Anterior'}
+              </span>
               <span className="text-sm font-bold text-white truncate max-w-[200px]">{anterior.titulo}</span>
             </div>
           </Link>
@@ -204,11 +214,13 @@ export function DevocionalDetailClient({ devocional, anterior, proximo }: Props)
 
         {proximo ? (
           <Link
-            href={`/devocionais/${proximo.slug}`}
+            href={localizePath(`/devocionais/${proximo.slug}`)}
             className="flex items-center justify-end gap-3 p-4 rounded-xl border border-slate-800 hover:border-slate-600 bg-slate-900/50 hover:bg-slate-900 transition-colors group text-right"
           >
             <div className="flex flex-col text-right">
-              <span className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Próximo Devocional</span>
+              <span className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
+                {locale === 'en' ? 'Next Devotional' : locale === 'es' ? 'Próximo Devocional' : 'Próximo Devocional'}
+              </span>
               <span className="text-sm font-bold text-white truncate max-w-[200px]">{proximo.titulo}</span>
             </div>
             <div className="p-2 rounded-full bg-slate-800 group-hover:bg-indigo-500/20 text-slate-400 group-hover:text-indigo-400 transition-colors">

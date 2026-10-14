@@ -65,28 +65,80 @@ const FERRAMENTAS_IA = [
   }
 ];
 
+import { useI18n } from '@/lib/i18n/I18nContext';
+
 export function FerramentasClient() {
+  const { t, localizePath } = useI18n();
+
+  const FERRAMENTAS_IA = [
+    {
+      id: 'esboco',
+      title: 'Gerador de Esboço Bíblico',
+      description: 'Crie uma estrutura lógica e homilética completa para pregações com introdução, tópicos e aplicação prática.',
+      icon: BookOpen,
+      href: '/ferramentas/gerador-esboco',
+      buttonText: t.ferramentas.testGenerator,
+      color: 'from-blue-600 to-blue-800'
+    },
+    {
+      id: 'exegese',
+      title: 'Explicador Exegético de Passagens',
+      description: 'Faça uma exegese profunda e clara de qualquer texto bíblico considerando o contexto histórico, literário e teológico.',
+      icon: Search,
+      href: '/ferramentas/exegese',
+      buttonText: t.ferramentas.explainPassage,
+      color: 'from-purple-600 to-purple-800'
+    },
+    {
+      id: 'personagem',
+      title: 'Estudo de Personagens Bíblicos',
+      description: 'Gere um estudo detalhado e biográfico sobre qualquer personagem bíblico, com virtudes, falhas e lições.',
+      icon: User,
+      href: '/ferramentas/personagens',
+      buttonText: t.ferramentas.generateStudy,
+      color: 'from-emerald-600 to-emerald-800'
+    },
+    {
+      id: 'perguntas',
+      title: 'Gerador de Perguntas para Grupos',
+      description: 'Crie perguntas para discussão em grupo (EBD, PG, Jovens) focadas em observação, interpretação e aplicação.',
+      icon: MessageCircle,
+      href: '/ferramentas/perguntas',
+      buttonText: t.ferramentas.generateQuestions,
+      color: 'from-orange-600 to-orange-800'
+    },
+    {
+      id: 'sermao',
+      title: 'Preparador Completo de Sermões',
+      description: 'Desenvolva um sermão completo e detalhado, com transições, ilustrações, e apelo final focado no público-alvo.',
+      icon: FileText,
+      href: '/ferramentas/sermao',
+      buttonText: t.ferramentas.prepareSermon,
+      color: 'from-[#D4AF37] to-[#C59B27]'
+    }
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
       
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-400">
-        <Link href="/" className="hover:text-white transition-colors">Início</Link>
+        <Link href={localizePath('/')} className="hover:text-white transition-colors">{t.nav.inicio}</Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-[#E5C05B] font-semibold">Ferramentas</span>
+        <span className="text-[#E5C05B] font-semibold">{t.nav.ferramentas}</span>
       </nav>
 
       {/* Header Info */}
       <div className="space-y-3">
         <div className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] flex items-center gap-1.5">
           <Wrench className="w-4 h-4" />
-          <span>Ecossistema de Soluções</span>
+          <span>{t.ferramentas.pageBadge}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-          Ferramentas Digitais
+          {t.ferramentas.pageTitle}
         </h1>
         <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
-          Aplicativos, plataformas de estudo e sistemas de gestão integrados ao ecossistema BH Digital.
+          {t.ferramentas.pageDesc}
         </p>
       </div>
 

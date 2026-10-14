@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { ConteudoItem } from '@/types';
 import { MOCK_CONTEUDOS } from '@/lib/data/conteudos';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 const ALL_CATEGORIES = [
   "Curiosidades Bíblicas", "Você Sabia?", "Personagens Bíblicos", "Lugares da Bíblia", 
@@ -23,6 +24,7 @@ const ALL_CATEGORIES = [
 const ITEMS_PER_PAGE = 12;
 
 export function ConteudosClient() {
+  const { t, localizePath } = useI18n();
   const [categoriaFiltro, setCategoriaFiltro] = useState<string>('Todas');
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
@@ -66,22 +68,22 @@ export function ConteudosClient() {
       
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-400">
-        <Link href="/" className="hover:text-white transition-colors">Início</Link>
+        <Link href={localizePath('/')} className="hover:text-white transition-colors">{t.nav.inicio}</Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-[#E5C05B] font-semibold">Conteúdos</span>
+        <span className="text-[#E5C05B] font-semibold">{t.conteudos.pageTitle}</span>
       </nav>
 
       {/* Header Info */}
       <div className="space-y-3">
         <div className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] flex items-center gap-1.5">
           <Library className="w-4 h-4" />
-          <span>Biblioteca Digital</span>
+          <span>{t.conteudos.pageBadge}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-          Biblioteca de Conteúdos
+          {t.conteudos.pageTitle}
         </h1>
         <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
-          Conheça a Bíblia, descubra curiosidades, aprofunde sua fé e encontre conteúdos para fortalecer sua caminhada com Deus.
+          {t.conteudos.pageDesc}
         </p>
       </div>
 

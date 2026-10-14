@@ -5,9 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, LogIn, BookOpen } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t, localizePath } = useI18n();
+
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [showSenha, setShowSenha] = useState(false);
@@ -27,10 +30,10 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError(error.message || 'Não foi possível entrar. Verifique seu e-mail e senha.');
+      setError(error.message || t.auth.loginError);
       setLoading(false);
     } else {
-      window.location.href = '/perfil';
+      window.location.href = localizePath('/perfil');
     }
   };
 
@@ -43,8 +46,8 @@ export default function LoginPage() {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-[#1E3A8A] to-[#0A1124] border border-[#D4AF37]/50 flex items-center justify-center shadow-xl">
             <span className="text-[#E5C05B] font-extrabold text-2xl">BH</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Entrar no BH DIGITAL</h1>
-          <p className="text-sm text-slate-400">Bem-vindo de volta! Acesse sua conta para continuar.</p>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">{t.auth.loginTitle}</h1>
+          <p className="text-sm text-slate-400">{t.auth.loginSubtitle}</p>
         </div>
 
         {/* Card */}
@@ -52,7 +55,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
               <label htmlFor="email-login" className="text-xs font-semibold text-slate-300 block">
-                E-mail
+                {t.auth.email}
               </label>
               <input
                 id="email-login"
@@ -60,14 +63,14 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                placeholder={t.auth.emailPlaceholder}
                 className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
               />
             </div>
 
             <div className="space-y-1.5">
               <label htmlFor="senha-login" className="text-xs font-semibold text-slate-300 block">
-                Senha
+                {t.auth.password}
               </label>
               <div className="relative">
                 <input
@@ -76,7 +79,7 @@ export default function LoginPage() {
                   required
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  placeholder="Sua senha..."
+                  placeholder={t.auth.passwordPlaceholder}
                   className="w-full px-4 py-3 pr-11 bg-slate-900/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                 />
                 <button
@@ -90,7 +93,7 @@ export default function LoginPage() {
               </div>
               <div className="text-right">
                 <button type="button" className="text-xs text-[#E5C05B] hover:text-white transition-colors">
-                  Esqueci minha senha
+                  {t.auth.forgotPassword}
                 </button>
               </div>
             </div>
@@ -107,11 +110,11 @@ export default function LoginPage() {
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-950/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <span className="animate-pulse">Entrando...</span>
+                <span className="animate-pulse">{t.nav.loading}</span>
               ) : (
                 <>
                   <LogIn className="w-4 h-4" />
-                  <span>ENTRAR</span>
+                  <span>{t.auth.btnLogin}</span>
                 </>
               )}
             </button>
@@ -119,17 +122,17 @@ export default function LoginPage() {
 
           <div className="pt-4 border-t border-slate-800 text-center space-y-3">
             <p className="text-xs text-slate-400">
-              Ainda não tem uma conta?{' '}
-              <Link href="/auth/cadastro" className="text-[#E5C05B] font-semibold hover:text-white transition-colors">
-                Criar conta gratuita
+              {t.auth.dontHaveAccount}{' '}
+              <Link href={localizePath('/auth/cadastro')} className="text-[#E5C05B] font-semibold hover:text-white transition-colors">
+                {t.auth.linkRegister}
               </Link>
             </p>
             <Link
-              href="/"
+              href={localizePath('/')}
               className="text-xs text-slate-500 hover:text-slate-300 flex items-center justify-center gap-1.5 transition-colors"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>Voltar para a plataforma</span>
+              <span>{t.nav.backToHome}</span>
             </Link>
           </div>
         </div>

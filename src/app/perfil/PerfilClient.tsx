@@ -18,11 +18,14 @@ import {
   Smartphone
 } from 'lucide-react';
 import { MOCK_ESTUDOS, MOCK_DEVOCIONAIS } from '@/lib/mockData';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 type TabType = 'perfil' | 'favoritos' | 'estudos' | 'devocionais' | 'premium' | 'configuracoes';
 
 export function PerfilClient() {
   const router = useRouter();
+  const { t, localizePath } = useI18n();
+
   const [activeTab, setActiveTab] = useState<TabType>('perfil');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
@@ -57,7 +60,7 @@ export function PerfilClient() {
   };
 
   const handleLogout = () => {
-    router.push('/auth/login');
+    router.push(localizePath('/auth/login'));
   };
 
   return (
@@ -65,9 +68,9 @@ export function PerfilClient() {
       
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-slate-400">
-        <Link href="/" className="hover:text-white transition-colors">Início</Link>
+        <Link href={localizePath('/')} className="hover:text-white transition-colors">{t.nav.inicio}</Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-[#E5C05B] font-semibold">Área do Usuário</span>
+        <span className="text-[#E5C05B] font-semibold">{t.perfil.breadcrumb}</span>
       </nav>
 
       {/* Header Info */}
@@ -82,7 +85,7 @@ export function PerfilClient() {
                 {nome}
               </h1>
               <span className="px-2.5 py-0.5 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#E5C05B] text-[10px] font-bold uppercase">
-                Membro BH Digital
+                {t.perfil.memberBadge}
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-0.5">{email}</p>
@@ -94,7 +97,7 @@ export function PerfilClient() {
           className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-red-950/60 hover:text-red-400 text-slate-400 text-xs font-semibold border border-slate-800 transition-colors flex items-center gap-2 self-start sm:self-auto"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>Sair da Conta</span>
+          <span>{t.perfil.logoutBtn}</span>
         </button>
       </div>
 
@@ -112,7 +115,7 @@ export function PerfilClient() {
             }`}
           >
             <User className="w-4 h-4 text-[#D4AF37]" />
-            <span>Meu Perfil</span>
+            <span>{t.perfil.tabProfile}</span>
           </button>
 
           <button
@@ -124,7 +127,7 @@ export function PerfilClient() {
             }`}
           >
             <Bookmark className="w-4 h-4 text-[#D4AF37]" />
-            <span>Favoritos</span>
+            <span>{t.perfil.tabBookmarks}</span>
           </button>
 
           <button
@@ -136,7 +139,7 @@ export function PerfilClient() {
             }`}
           >
             <BookMarked className="w-4 h-4 text-[#D4AF37]" />
-            <span>Estudos Salvos</span>
+            <span>{t.perfil.tabStudies}</span>
           </button>
 
           <button
@@ -148,7 +151,7 @@ export function PerfilClient() {
             }`}
           >
             <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-            <span>Devocionais Salvos</span>
+            <span>{t.perfil.tabDevotionals}</span>
           </button>
 
           <button
@@ -160,7 +163,7 @@ export function PerfilClient() {
             }`}
           >
             <Crown className="w-4 h-4 text-[#D4AF37]" />
-            <span>Assinatura Premium</span>
+            <span>{t.perfil.tabPremium}</span>
           </button>
 
           <button
@@ -172,7 +175,7 @@ export function PerfilClient() {
             }`}
           >
             <Settings className="w-4 h-4 text-[#D4AF37]" />
-            <span>Configurações</span>
+            <span>{t.perfil.tabSettings}</span>
           </button>
         </div>
 
@@ -183,21 +186,21 @@ export function PerfilClient() {
           {activeTab === 'perfil' && (
             <form onSubmit={handleSaveProfile} className="space-y-6">
               <div className="border-b border-slate-800 pb-3">
-                <h3 className="text-xl font-bold text-white">Editar Dados Pessoais</h3>
-                <p className="text-xs text-slate-400">Atualize suas informações no ecossistema BH Digital.</p>
+                <h3 className="text-xl font-bold text-white">{t.perfil.tabProfile}</h3>
+                <p className="text-xs text-slate-400">{t.perfil.pageDesc}</p>
               </div>
 
               {savedSuccess && (
                 <div className="p-3.5 rounded-xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-fadeIn">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  <span>Perfil atualizado com sucesso!</span>
+                  <span>{t.perfil.profileSavedSuccess}</span>
                 </div>
               )}
 
               <div className="space-y-4 max-w-xl">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Nome Completo
+                    {t.auth.fullName}
                   </label>
                   <input
                     type="text"
@@ -209,7 +212,7 @@ export function PerfilClient() {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Endereço de E-mail
+                    {t.auth.email}
                   </label>
                   <input
                     type="email"
@@ -221,7 +224,7 @@ export function PerfilClient() {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Mini Biografia / Apresentação
+                    {t.perfil.bioLabel}
                   </label>
                   <textarea
                     rows={3}
@@ -237,7 +240,7 @@ export function PerfilClient() {
                   type="submit"
                   className="px-6 py-3 rounded-xl bg-[#1E3A8A] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md"
                 >
-                  Salvar Alterações
+                  {t.perfil.btnSaveProfile}
                 </button>
               </div>
             </form>
@@ -247,8 +250,8 @@ export function PerfilClient() {
           {activeTab === 'favoritos' && (
             <div className="space-y-6">
               <div className="border-b border-slate-800 pb-3">
-                <h3 className="text-xl font-bold text-white">Versículos Favoritados</h3>
-                <p className="text-xs text-slate-400">Versículos marcados durante a leitura da Bíblia Online.</p>
+                <h3 className="text-xl font-bold text-white">{t.perfil.tabBookmarks}</h3>
+                <p className="text-xs text-slate-400">{t.biblia.bookmarks}</p>
               </div>
 
               <div className="space-y-3">
@@ -280,24 +283,24 @@ export function PerfilClient() {
           {activeTab === 'estudos' && (
             <div className="space-y-6">
               <div className="border-b border-slate-800 pb-3">
-                <h3 className="text-xl font-bold text-white">Estudos Bíblicos Salvos</h3>
-                <p className="text-xs text-slate-400">Estudos bíblicos salvos em sua biblioteca pessoal.</p>
+                <h3 className="text-xl font-bold text-white">{t.perfil.tabStudies}</h3>
+                <p className="text-xs text-slate-400">{t.estudos.pageTitle}</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {MOCK_ESTUDOS.slice(0, 2).map((e) => {
                   const catSlug = e.categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
                   return (
-                  <Link
-                    key={e.id}
-                    href={`/estudos/${catSlug}/${e.slug}`}
-                    className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 space-y-2 group block"
-                  >
-                    <span className="text-[10px] font-bold uppercase text-[#E5C05B]">{e.categoria}</span>
-                    <h4 className="text-sm font-bold text-white group-hover:text-[#E5C05B] transition-colors">{e.titulo}</h4>
-                    <p className="text-xs text-slate-400 line-clamp-2">{e.resumo}</p>
-                  </Link>
-                );
+                    <Link
+                      key={e.id}
+                      href={localizePath(`/estudos/${catSlug}/${e.slug}`)}
+                      className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 space-y-2 group block"
+                    >
+                      <span className="text-[10px] font-bold uppercase text-[#E5C05B]">{e.categoria}</span>
+                      <h4 className="text-sm font-bold text-white group-hover:text-[#E5C05B] transition-colors">{e.titulo}</h4>
+                      <p className="text-xs text-slate-400 line-clamp-2">{e.resumo}</p>
+                    </Link>
+                  );
                 })}
               </div>
             </div>
@@ -307,8 +310,8 @@ export function PerfilClient() {
           {activeTab === 'devocionais' && (
             <div className="space-y-6">
               <div className="border-b border-slate-800 pb-3">
-                <h3 className="text-xl font-bold text-white">Devocionais Salvos</h3>
-                <p className="text-xs text-slate-400">Mensagens inspiradoras salvas para releitura diária.</p>
+                <h3 className="text-xl font-bold text-white">{t.perfil.tabDevotionals}</h3>
+                <p className="text-xs text-slate-400">{t.devocionais.pageTitle}</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -327,8 +330,8 @@ export function PerfilClient() {
           {activeTab === 'premium' && (
             <div className="space-y-6">
               <div className="border-b border-slate-800 pb-3">
-                <h3 className="text-xl font-bold text-white">Sua Assinatura</h3>
-                <p className="text-xs text-slate-400">Status do plano na plataforma BH Digital.</p>
+                <h3 className="text-xl font-bold text-white">{t.perfil.tabPremium}</h3>
+                <p className="text-xs text-slate-400">{t.premium.heroDesc}</p>
               </div>
 
               <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-950/60 to-slate-900 border border-blue-900/50 space-y-4">
@@ -337,7 +340,7 @@ export function PerfilClient() {
                     <Crown className="w-8 h-8 text-[#D4AF37]" />
                     <div>
                       <h4 className="text-base font-bold text-white">Plano Gratuito / Visitante</h4>
-                      <p className="text-xs text-slate-400">Acesso a todos os conteúdos públicos</p>
+                      <p className="text-xs text-slate-400">Acesso aos conteúdos abertos</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -346,13 +349,13 @@ export function PerfilClient() {
                       disabled={portalLoading}
                       className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase disabled:opacity-50"
                     >
-                      {portalLoading ? 'Carregando...' : 'Gerenciar Assinatura'}
+                      {portalLoading ? t.nav.loading : t.perfil.stripePortalBtn}
                     </button>
                     <Link
-                      href="/premium"
+                      href={localizePath('/premium')}
                       className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C59B27] text-slate-950 font-bold text-xs uppercase hover:brightness-110"
                     >
-                      Fazer Upgrade
+                      {t.nav.premium}
                     </Link>
                   </div>
                 </div>
@@ -364,7 +367,7 @@ export function PerfilClient() {
           {activeTab === 'configuracoes' && (
             <div className="space-y-6">
               <div className="border-b border-slate-800 pb-3">
-                <h3 className="text-xl font-bold text-white">Preferências de Conta</h3>
+                <h3 className="text-xl font-bold text-white">{t.perfil.tabSettings}</h3>
                 <p className="text-xs text-slate-400">Notificações e ajustes de experiência.</p>
               </div>
 

@@ -33,8 +33,10 @@ import {
 } from '@/lib/mockData';
 import { Modal } from '@/components/ui/Modal';
 import { ApoioModal } from '@/components/ui/ApoioModal';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 export default function HomePage() {
+  const { t, localizePath } = useI18n();
   const [newsletterNome, setNewsletterNome] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterEnviado, setNewsletterEnviado] = useState(false);
@@ -77,20 +79,20 @@ export default function HomePage() {
               <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0E1E3D] border border-[#D4AF37]/40 text-[#E5C05B] text-xs font-semibold tracking-wide shadow-md">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span className="font-bold tracking-wider">PLATAFORMA CRISTÃ INTEGRADA</span>
+                  <span className="font-bold tracking-wider">{t.home.heroBadge}</span>
                 </div>
 
                 <div className="space-y-3">
                   <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                    BH DIGITAL
+                    {t.home.heroTitle}
                   </h1>
                   <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#E5C05B] tracking-tight leading-snug">
-                    Palavra • Estudos • Livros • Ferramentas
+                    {t.home.heroSubtitle}
                   </h2>
                 </div>
 
                 <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Uma plataforma digital profissional criada para reunir conteúdos edificantes, livros, aplicativos e recursos bíblicos em um único ecossistema seguro e inspirador.
+                  {t.home.heroDesc}
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
@@ -98,14 +100,14 @@ export default function HomePage() {
                     onClick={() => scrollToSection('secao-biblia-sagrada')}
                     className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#E5C05B] to-[#C59B27] hover:from-[#E5C05B] hover:to-[#D4AF37] text-slate-950 font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-xl shadow-[#D4AF37]/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    EXPLORAR PLATAFORMA
+                    {t.home.heroCtaBiblia}
                   </button>
                   <button
                     onClick={() => setIsAppModalOpen(true)}
                     className="w-full sm:w-auto px-7 py-4 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm border border-slate-700 hover:border-slate-500 flex items-center justify-center gap-2 transition-all shadow-md"
                   >
                     <Smartphone className="w-4 h-4 text-[#E5C05B]" />
-                    <span>CONHECER A BÍBLIA BH</span>
+                    <span>{t.home.heroCtaApp}</span>
                   </button>
                 </div>
 
@@ -207,16 +209,16 @@ export default function HomePage() {
               <div className="space-y-4 max-w-2xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-800/60 text-blue-300 text-xs font-bold uppercase tracking-wider">
                   <Smartphone className="w-3.5 h-3.5 text-[#E5C05B]" />
-                  <span>APLICATIVO OFICIAL PARA ANDROID</span>
+                  <span>{t.home.appCardBadge}</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                  BÍBLIA SAGRADA BH
+                  {t.home.appCardTitle}
                 </h2>
                 <div className="inline-block px-3 py-1.5 rounded-lg bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#E5C05B] text-xs font-extrabold uppercase tracking-wider">
-                  DESTAQUE: Versão ACF — Almeida Corrigida Fiel
+                  {t.home.appCardSubtitle}
                 </div>
                 <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  Desenvolvido para oferecer uma experiência de leitura limpa, reverente e sem distrações. Tenha os 66 livros das Sagradas Escrituras sempre com você.
+                  {t.home.appCardDesc}
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
@@ -224,15 +226,15 @@ export default function HomePage() {
                   onClick={() => setIsAppModalOpen(true)}
                   className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#E5C05B] to-[#C59B27] hover:from-[#E5C05B] hover:to-[#D4AF37] text-slate-950 font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-2"
                 >
-                  <span>CONHECER O APLICATIVO</span>
+                  <span>{t.home.appInstallPlayStore}</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
                 <Link
-                  href="/biblia"
+                  href={localizePath('/biblia')}
                   className="px-6 py-3.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-white font-semibold text-xs border border-slate-700 flex items-center justify-center gap-2 transition-all"
                 >
                   <BookOpen className="w-4 h-4 text-[#E5C05B]" />
-                  <span>LEITURA ONLINE NO NAVEGADOR</span>
+                  <span>{t.home.bibleBtnReadNow}</span>
                 </Link>
               </div>
             </div>
@@ -348,18 +350,18 @@ export default function HomePage() {
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Inspiração para o Seu Dia</span>
+                <span>{t.devocionais.pageBadge}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">DEVOCIONAIS</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">{t.devocionais.pageTitle}</h2>
               <p className="text-sm sm:text-base text-slate-300">
-                Mensagens curtas para reflexão diária e renovação espiritual.
+                {t.devocionais.pageDesc}
               </p>
             </div>
             <Link
-              href="/devocionais"
+              href={localizePath('/devocionais')}
               className="self-start md:self-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#E5C05B] font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition-all uppercase tracking-wider"
             >
-              <span>VER DEVOCIONAIS</span>
+              <span>{t.home.devocionaisViewAll}</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -368,7 +370,7 @@ export default function HomePage() {
             {MOCK_DEVOCIONAIS.map((dev) => (
               <Link
                 key={dev.id}
-                href="/devocionais"
+                href={localizePath(`/devocionais/${dev.slug}`)}
                 className="rounded-2xl bg-[#080E1B] border border-slate-800 hover:border-slate-700 overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-md group cursor-pointer"
               >
                 <div>
@@ -394,7 +396,7 @@ export default function HomePage() {
                   <div
                     className="w-full py-2.5 px-3 rounded-xl bg-slate-900 group-hover:bg-slate-800 text-xs font-semibold text-white border border-slate-800 flex items-center justify-center gap-1 transition-all"
                   >
-                    <span>Ler Devocional</span>
+                    <span>{t.devocionais.readDevotional}</span>
                     <ChevronRight className="w-3.5 h-3.5 text-[#E5C05B]" />
                   </div>
                 </div>
@@ -414,7 +416,7 @@ export default function HomePage() {
               <div className="flex-1 space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#E5C05B] text-xs font-bold uppercase tracking-wider">
                   <Layers className="w-3.5 h-3.5" />
-                  <span>SÉRIE DE ESTUDOS EM DESTAQUE</span>
+                  <span>{t.licoes.pageBadge}</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
                   {SERIE_LICOES.titulo}
@@ -424,10 +426,10 @@ export default function HomePage() {
                 
                 <div className="pt-4">
                   <Link
-                    href="/licoes"
+                    href={localizePath('/licoes')}
                     className="inline-flex px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E5C05B] hover:brightness-110 text-slate-950 font-extrabold text-xs uppercase tracking-wider shadow-lg items-center gap-2 transition-all shrink-0"
                   >
-                    <span>VER TODAS AS LIÇÕES</span>
+                    <span>{t.home.licoesViewAll}</span>
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -497,10 +499,10 @@ export default function HomePage() {
               </p>
             </div>
             <Link
-              href="/livros"
+              href={localizePath('/livros')}
               className="self-start md:self-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#E5C05B] font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition-all uppercase tracking-wider"
             >
-              <span>VER CATÁLOGO COMPLETO</span>
+              <span>{t.home.livrosViewAll}</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -525,7 +527,7 @@ export default function HomePage() {
                       {livro.formato}
                     </span>
                     <h3 className="text-xl font-bold text-white tracking-tight">{livro.titulo}</h3>
-                    <p className="text-xs text-slate-400">Por <strong className="text-slate-200">{livro.autor}</strong></p>
+                    <p className="text-xs text-slate-400">{t.livros.byAuthor} <strong className="text-slate-200">{livro.autor}</strong></p>
                     <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">{livro.descricao}</p>
                   </div>
                   <div className="space-y-2 pt-2 border-t border-slate-800/80">
@@ -536,15 +538,15 @@ export default function HomePage() {
                         rel="noopener noreferrer"
                         className="flex-1 py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all uppercase tracking-wider"
                       >
-                        <span>COMPRAR AGORA</span>
+                        <span>{t.livros.btnBuyPhysical}</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     </div>
                     <Link
-                      href="/livros"
+                      href={localizePath(`/livros/${livro.slug}`)}
                       className="w-full text-center text-xs text-slate-400 hover:text-white py-1 font-medium transition-colors block"
                     >
-                      Ver detalhes editoriais e sinopse completa →
+                      {t.livros.aboutBook} →
                     </Link>
                   </div>
                 </div>
@@ -561,18 +563,18 @@ export default function HomePage() {
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
                 <Compass className="w-3.5 h-3.5" />
-                <span>Tecnologia a Serviço da Palavra</span>
+                <span>{t.ferramentas.pageBadge}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">FERRAMENTAS DIGITAIS</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">{t.ferramentas.pageTitle}</h2>
               <p className="text-sm sm:text-base text-slate-300">
-                Recursos interativos para otimizar sua rotina de estudo bíblico.
+                {t.ferramentas.pageDesc}
               </p>
             </div>
             <Link
-              href="/ferramentas"
+              href={localizePath('/ferramentas')}
               className="self-start md:self-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#E5C05B] font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition-all uppercase tracking-wider"
             >
-              <span>ACESSAR TODAS AS FERRAMENTAS</span>
+              <span>{t.home.pillarsBadge}</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -826,35 +828,35 @@ export default function HomePage() {
             <div className="text-center space-y-3 max-w-2xl mx-auto">
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
                 <Send className="w-3.5 h-3.5" />
-                <span>Comunidade & Notificações</span>
+                <span>{t.home.communityBadge}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">SIGA O BH DIGITAL</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">{t.home.communityTitle}</h2>
               <p className="text-sm sm:text-base text-slate-300">
-                Receba novos estudos, devocionais, lições e novidades diretamente em seu e-mail.
+                {t.home.communityDesc}
               </p>
             </div>
 
             <form onSubmit={handleNewsletterSubmit} className="max-w-xl mx-auto space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Seu Nome</label>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">{t.auth.fullName}</label>
                   <input
                     type="text"
                     required
                     value={newsletterNome}
                     onChange={(e) => setNewsletterNome(e.target.value)}
-                    placeholder="Digite seu nome..."
+                    placeholder={t.home.communityNamePlaceholder}
                     className="w-full px-4 py-3 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Seu E-mail</label>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">{t.auth.email}</label>
                   <input
                     type="email"
                     required
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="Digite seu melhor e-mail..."
+                    placeholder={t.home.communityEmailPlaceholder}
                     className="w-full px-4 py-3 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                   />
                 </div>
@@ -864,11 +866,11 @@ export default function HomePage() {
                 className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E5C05B] hover:brightness-110 text-slate-950 font-extrabold text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>QUERO RECEBER CONTEÚDOS</span>
+                <span>{t.home.communityBtnSubmit}</span>
               </button>
               {newsletterEnviado && (
                 <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-emerald-200 text-xs text-center animate-fadeIn">
-                  ✓ Cadastro realizado! Você receberá nossas atualizações em breve.
+                  {t.home.communitySuccess}
                 </div>
               )}
             </form>

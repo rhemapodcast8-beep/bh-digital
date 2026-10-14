@@ -25,9 +25,11 @@ import {
 import { MaterialItem } from '@/types';
 import { useCheckout } from '@/hooks/useCheckout';
 import { MOCK_MATERIAIS } from '@/lib/mockData';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 export function PremiumClient() {
   const router = useRouter();
+  const { t, localizePath } = useI18n();
   const [activeToolModal, setActiveToolModal] = useState<string | null>(null);
   const [toolSimulating, setToolSimulating] = useState<boolean>(false);
   const [toolResult, setToolResult] = useState<any | null>(null);
@@ -132,14 +134,14 @@ export function PremiumClient() {
       <div className="border-b border-slate-800/80 bg-[#070D18]/90 backdrop-blur-md sticky top-20 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <nav className="flex items-center gap-2 text-xs text-slate-400">
-            <Link href="/" className="hover:text-white transition-colors">Início</Link>
+            <Link href={localizePath('/')} className="hover:text-white transition-colors">{t.nav.inicio}</Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-            <span className="text-[#E5C05B] font-semibold">Biblioteca Premium</span>
+            <span className="text-[#E5C05B] font-semibold">{t.premium.pageTitle}</span>
           </nav>
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#E5C05B] font-bold bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/30">
-              Assinatura Premium
+              {t.nav.premium}
             </span>
           </div>
         </div>
@@ -153,15 +155,15 @@ export function PremiumClient() {
           <div className="max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#E5C05B] text-xs font-extrabold uppercase tracking-widest">
               <Crown className="w-4 h-4 text-[#D4AF37]" />
-              <span>Plano de Assinatura Exclusivo</span>
+              <span>{t.premium.heroBadge}</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
-              Biblioteca Premium BH Digital
+              {t.premium.heroTitle}
             </h1>
 
             <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-              Recursos teológicos avançados, geradores inteligentes de esboços e sermões, apostilas pedagógicas exclusivas e materiais práticos para liderança pastoral.
+              {t.premium.heroDesc}
             </p>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
@@ -170,14 +172,14 @@ export function PremiumClient() {
                 disabled={isCheckoutLoading}
                 className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-[#E5C05B] to-[#C59B27] hover:brightness-110 text-slate-950 font-extrabold text-sm uppercase tracking-wider shadow-2xl shadow-amber-950/40 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {isCheckoutLoading ? 'Abrindo checkout...' : 'Assinar Premium'}
+                {isCheckoutLoading ? t.nav.loading : t.premium.subscribeMonthly}
               </button>
 
               <Link
-                href="/materiais"
+                href={localizePath('/materiais')}
                 className="px-6 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-white font-bold text-sm transition-all"
               >
-                Ver materiais gratuitos
+                {t.materiais.pageTitle}
               </Link>
             </div>
 

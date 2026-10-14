@@ -17,12 +17,14 @@ import {
 import { MaterialItem, MaterialCategoria } from '@/types';
 import { MOCK_MATERIAIS, CATEGORIAS_MATERIAIS } from '@/lib/mockData';
 import { Pagination } from '@/components/ui/Pagination';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 const ITEMS_PER_PAGE = 12;
 
 export function MateriaisClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t, localizePath } = useI18n();
   const currentPage = Number(searchParams.get('page')) || 1;
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MaterialCategoria | 'Todas'>('Todas');
@@ -86,18 +88,18 @@ export function MateriaisClient() {
       <div className="border-b border-slate-800/80 bg-[#070D18]/90 backdrop-blur-md sticky top-20 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <nav className="flex items-center gap-2 text-xs text-slate-400">
-            <Link href="/" className="hover:text-white transition-colors">Início</Link>
+            <Link href={localizePath('/')} className="hover:text-white transition-colors">{t.nav.inicio}</Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-            <span className="text-[#E5C05B] font-semibold">Materiais</span>
+            <span className="text-[#E5C05B] font-semibold">{t.materiais.pageTitle}</span>
           </nav>
 
           <div className="flex items-center gap-2">
             <Link
-              href="/premium"
+              href={localizePath('/premium')}
               className="inline-flex items-center gap-1.5 text-xs text-[#E5C05B] bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 px-3 py-1.5 rounded-lg transition-all"
             >
               <Crown className="w-3.5 h-3.5" />
-              <span>Biblioteca Premium</span>
+              <span>{t.premium.pageTitle}</span>
             </Link>
           </div>
         </div>
@@ -111,15 +113,15 @@ export function MateriaisClient() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#E5C05B] text-xs font-semibold mb-4 tracking-wide">
               <Layers className="w-3.5 h-3.5" />
-              <span>CENTRO DE MATERIAIS E RECURSOS DIGITAIS</span>
+              <span>{t.materiais.pageBadge}</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
-              Materiais Bíblicos e Pedagógicos
+              {t.materiais.pageTitle}
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 max-w-2xl">
-              Acesse esboços para mensagens, estudos detalhados, apostilas para professores, manuais de liderança e conteúdos práticos para a edificação do corpo de Cristo.
+              {t.materiais.pageDesc}
             </p>
 
             {/* Search Bar */}

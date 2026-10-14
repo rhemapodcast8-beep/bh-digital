@@ -260,6 +260,8 @@ export const es: TranslationType = {
     btnBuyPhysical: 'Comprar Edición Impresa',
     btnBuyAmazon: 'Adquirir en Amazon',
     btnBuyUiclap: 'Adquirir en UICLAP',
+    viewFullBook: 'Ver Libro Completo',
+    availableFormats: 'Disponible en Físico y E-book',
     aboutBook: 'Sobre el Libro',
     synopsis: 'Sinopsis y Temas Clave',
   },

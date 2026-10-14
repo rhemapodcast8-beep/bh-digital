@@ -258,6 +258,8 @@ export const ptBR = {
     btnBuyPhysical: 'Comprar Edição Impressa',
     btnBuyAmazon: 'Adquirir na Amazon',
     btnBuyUiclap: 'Adquirir na UICLAP',
+    viewFullBook: 'Ver Livro Completo',
+    availableFormats: 'Disponível em Físico e E-book',
     aboutBook: 'Sobre o Livro',
     synopsis: 'Sinopse e Temas Centrais',
   },

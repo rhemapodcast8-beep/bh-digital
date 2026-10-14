@@ -260,6 +260,8 @@ export const en: TranslationType = {
     btnBuyPhysical: 'Buy Paperback Copy',
     btnBuyAmazon: 'Get on Amazon',
     btnBuyUiclap: 'Get on UICLAP',
+    viewFullBook: 'View Full Book',
+    availableFormats: 'Available in Paperback & E-book',
     aboutBook: 'About the Book',
     synopsis: 'Synopsis & Core Themes',
   },

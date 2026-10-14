@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ChevronLeft, BookOpen, ExternalLink } from 'lucide-react';
 import { LivroItem } from '@/types';
+import { useI18n } from '@/lib/i18n/I18nContext';
 
 export default function LivroDetailClient({ 
   livro, 
@@ -11,14 +12,16 @@ export default function LivroDetailClient({
   livro: LivroItem; 
   relacionados: LivroItem[]; 
 }) {
+  const { t, localizePath } = useI18n();
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
       
       {/* Breadcrumb e Voltar */}
       <div className="flex items-center gap-2 text-sm text-slate-400">
-        <Link href="/livros" className="hover:text-white transition-colors flex items-center gap-1">
+        <Link href={localizePath('/livros')} className="hover:text-white transition-colors flex items-center gap-1">
           <ChevronLeft className="w-4 h-4" />
-          Livros
+          {t.nav?.livros || 'Livros'}
         </Link>
         <span>/</span>
         <span className="text-white truncate">{livro.titulo}</span>
@@ -174,12 +177,12 @@ export default function LivroDetailClient({
 
       {/* Footer Nav */}
       <div className="pt-8 flex justify-center">
-        <Link 
-          href="/livros" 
+        <Link
+          href={localizePath('/livros')}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-medium text-sm transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
-          Voltar para Livros
+          {t.nav?.back || 'Voltar para Livros'}
         </Link>
       </div>
 

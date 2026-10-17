@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
-import Script from 'next/script';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { RouteTracker } from '@/components/analytics/RouteTracker';
 import { I18nProvider } from '@/lib/i18n/I18nContext';
 
@@ -65,21 +65,9 @@ export default function RootLayout({
     <html lang="pt-BR" className={plusJakartaSans.variable}>
       <body className="min-h-screen flex flex-col bg-[#060B16] text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-slate-950 antialiased">
         <I18nProvider>
-          {/* GA4: rastreamento de visitantes e page views */}
-          <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-0RNEK4PZCS"
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-0RNEK4PZCS', {
-                page_path: window.location.pathname,
-              });
-            `}
-          </Script>
+          {/* GA4: carrega o script e inicializa sem page_view automático */}
+          <GoogleAnalytics />
+          {/* GA4: envia page_view em cada mudança de rota */}
           <RouteTracker />
           <Header />
           <main className="flex-1">{children}</main>

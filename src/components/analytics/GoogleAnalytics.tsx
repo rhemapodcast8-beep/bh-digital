@@ -29,14 +29,14 @@ export function GoogleAnalytics() {
         strategy="afterInteractive"
       />
 
-      {/* 2. Inicializa o gtag sem page_view automático */}
+      {/* 2. Inicializa o gtag com rastreamento nativo e configurações de privacidade */}
       <Script id="ga4-init" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', '${measurementId}', {
-            send_page_view: false,
+            page_path: window.location.pathname,
             allow_google_signals: false,
             allow_ad_personalization_signals: false,
           });

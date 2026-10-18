@@ -37,7 +37,7 @@ export function trackEvent(
  */
 export function RouteTracker() {
   const pathname = usePathname();
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-ORNEK4PZCS';
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-0RNEK4PZCS';
   const prevPathnameRef = useRef<string | null>(null);
 
   useEffect(() => {

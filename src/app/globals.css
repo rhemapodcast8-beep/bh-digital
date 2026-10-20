@@ -244,3 +244,66 @@
   }
 }
 
+/* Reading Mode font scaling */
+#licao-reading-container.licao-text-large {
+  font-size: 1.125rem;
+}
+#licao-reading-container.licao-text-large p,
+#licao-reading-container.licao-text-large li {
+  line-height: 1.85;
+}
+
+#licao-reading-container.licao-text-xlarge {
+  font-size: 1.25rem;
+}
+#licao-reading-container.licao-text-xlarge p,
+#licao-reading-container.licao-text-xlarge li {
+  line-height: 1.95;
+}
+
+/* Print Styles for Lesson Export */
+@media print {
+  header,
+  footer,
+  .no-print,
+  nav,
+  .route-tracker {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  #licao-reading-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #111827 !important;
+  }
+
+  #licao-reading-container * {
+    color: #111827 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border-color: #cbd5e1 !important;
+  }
+
+  #licao-reading-container h1,
+  #licao-reading-container h2,
+  #licao-reading-container h3,
+  #licao-reading-container h4 {
+    color: #0f172a !important;
+    page-break-after: avoid;
+  }
+
+  #licao-reading-container section {
+    page-break-inside: avoid;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 1.5rem !important;
+    padding: 1rem !important;
+  }
+}
+

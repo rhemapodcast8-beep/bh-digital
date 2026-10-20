@@ -225,6 +225,10 @@ export interface LicaoBiblica {
   imagemCapa?: string;
   temaTrimestre: string;
   referenciaBiblica: string;
+  comentarista?: string;
+  data?: string;
+  hinosSugeridos?: string;
+  subsidioProfessor?: string;
   
   textoAureo: { referencia: string; texto: string; comentario: string };
   verdadePratica: { frase: string; explicacao: string };

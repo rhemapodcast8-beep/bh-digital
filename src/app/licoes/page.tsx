@@ -52,7 +52,9 @@ export default async function LicoesPage({
             <span>·</span>
             <span>Livro de Deuteronômio</span>
             <span>·</span>
-            <span>Lançamento 1º Trimestre 2026</span>
+            <span>4º Trimestre de 2026</span>
+            <span>·</span>
+            <span className="text-[#E5C05B]">Comentarista: Osiel Gomes</span>
           </div>
         </PageHero>
 
@@ -101,7 +103,9 @@ export default async function LicoesPage({
                     <span className="text-slate-500">·</span>
                     <span className="text-slate-400">Livro de Deuteronômio</span>
                     <span className="text-slate-500">·</span>
-                    <span className="text-slate-400">Lançamento 1º Trimestre 2026</span>
+                    <span className="text-slate-400">4º Trimestre de 2026</span>
+                    <span className="text-slate-500">·</span>
+                    <span className="text-[#E5C05B] font-semibold">Comentarista: Osiel Gomes</span>
                   </div>
                 </div>
                 <div className="shrink-0 w-48 sm:w-64">

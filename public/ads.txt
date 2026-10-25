@@ -1,0 +1,21 @@
+# ads.txt — Arquivo de Autorização de Vendedores de Anúncios
+#
+# INSTRUÇÕES:
+# Após a aprovação do site no Google AdSense, substitua a linha abaixo
+# com a linha exata fornecida pelo painel do AdSense:
+#
+#   AdSense > Conta > Autorização de anúncios (ads.txt)
+#
+# O formato padrão é:
+#   google.com, pub-XXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# Onde pub-XXXXXXXXXXXXXXXXX é o seu ID de editor (Publisher ID).
+# NÃO invente ou modifique este valor; copie exatamente do painel.
+#
+# Referência oficial:
+#   https://support.google.com/adsense/answer/7532444
+#
+# ─────────────────────────────────────────────────────────────
+# SUBSTITUA A LINHA ABAIXO PELA FORNECIDA PELO ADSENSE:
+# google.com, pub-XXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+# ─────────────────────────────────────────────────────────────

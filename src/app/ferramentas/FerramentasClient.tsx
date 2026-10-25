@@ -149,7 +149,7 @@ export function FerramentasClient() {
           Aplicações em Destaque
         </h2>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {/* WIPE CRM */}
           <div className="flex flex-col bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-lg hover:border-[#D4AF37]/50 transition-all">
             <div className="relative w-full h-64 sm:h-72">
@@ -201,8 +201,8 @@ export function FerramentasClient() {
                 className="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
                 unoptimized
               />
-              <div className="absolute top-4 left-4 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
-                STATUS: EM BREVE NA PLAY STORE
+              <div className="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+                DISPONÍVEL NA PLAY STORE
               </div>
             </div>
             <div className="p-6 md:p-8 flex-1 flex flex-col justify-between space-y-6">
@@ -215,11 +215,49 @@ export function FerramentasClient() {
               </div>
               
               <div className="mt-6">
-                <button 
-                  onClick={() => alert("Em breve o ESTUDA-FÁCIL estará disponível na Google Play.")}
-                  className="w-full text-center bg-slate-800 border border-slate-700 text-slate-400 font-bold text-sm py-4 rounded-xl cursor-not-allowed hover:bg-slate-800/80 transition-colors"
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.aistudio.estudafacil.kfudix"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-4 rounded-xl transition-colors shadow-lg"
                 >
-                  EM BREVE NA PLAY STORE
+                  <Smartphone className="w-4 h-4" />
+                  BAIXAR NA GOOGLE PLAY
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* MEU DIA 2.0 */}
+          <div className="flex flex-col bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-lg hover:border-[#D4AF37]/50 transition-all">
+            <div className="relative w-full h-64 sm:h-72 bg-[#0A1832] flex items-center justify-center p-8">
+              <Image 
+                src="/images/ferramentas/meu-dia-2.png" 
+                alt="Meu Dia 2.0" 
+                width={200}
+                height={200}
+                className="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                unoptimized
+              />
+              <div className="absolute top-4 left-4 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+                EM BREVE
+              </div>
+            </div>
+            <div className="p-6 md:p-8 flex-1 flex flex-col justify-between space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-white">Meu Dia 2.0</h3>
+                <p className="text-sm font-semibold text-blue-400 uppercase tracking-wider">Aplicativo de Organização</p>
+                <p className="text-slate-300 text-sm leading-relaxed mt-4">
+                  Gerencie suas tarefas, rotinas e compromissos do dia a dia com praticidade e eficiência.
+                </p>
+              </div>
+              
+              <div className="mt-6">
+                <button 
+                  disabled
+                  className="w-full text-center bg-slate-800 border border-slate-700 text-slate-500 font-bold text-sm py-4 rounded-xl cursor-not-allowed"
+                >
+                  EM BREVE
                 </button>
               </div>
             </div>

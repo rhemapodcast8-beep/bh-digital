@@ -37,6 +37,11 @@ export default function PrivacidadePage() {
             <h2 className="text-2xl font-bold text-white">{t.privacidade.sec4Title}</h2>
             <p>{t.privacidade.sec4Text}</p>
           </section>
+
+          <section className="space-y-3">
+            <h2 className="text-2xl font-bold text-white">{t.privacidade.sec5Title}</h2>
+            <p>{t.privacidade.sec5Text}</p>
+          </section>
         </div>
 
         <div className="text-center pt-12 border-t border-slate-800">

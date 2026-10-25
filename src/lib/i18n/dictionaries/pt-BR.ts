@@ -414,6 +414,9 @@ export const ptBR = {
     sec3Text: 'Não vendemos, trocamos ou de outra forma transferimos para terceiros suas informações pessoais identificáveis. Isso não inclui parceiros confiáveis que nos auxiliam na operação da plataforma sob sigilo.',
     sec4Title: '4. Segurança dos Dados',
     sec4Text: 'Implementamos uma variedade de medidas de segurança para manter a segurança das suas informações pessoais quando você as envia ou acessa. Utilizamos criptografia avançada e servidores seguros.',
+    sec5Title: '5. Publicidade, Cookies e Tecnologias de Terceiros',
+    sec5Text: 'Este site pode exibir anúncios veiculados pelo Google AdSense. O Google, como fornecedor terceirizado, utiliza cookies para exibir anúncios com base em visitas anteriores do usuário. O uso do cookie DART pelo Google permite a exibição de anúncios relevantes. Você pode desativar o uso do cookie DART acessando a Política de privacidade da rede de conteúdo e anúncios do Google em https://policies.google.com/technologies/ads. Também utilizamos cookies próprios para personalização da experiência. Ao continuar navegando neste site, você concorda com o uso dessas tecnologias. Consulte as configurações do seu navegador para gerenciar ou bloquear cookies.',
+
   },
 
   // Footer

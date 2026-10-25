@@ -416,6 +416,8 @@ export const es: TranslationType = {
     sec3Text: 'No vendemos ni comercializamos tus datos personales. Únicamente colaboramos con proveedores técnicos de infraestructura bajo rigurosos acuerdos de confidencialidad.',
     sec4Title: '4. Seguridad de los Datos',
     sec4Text: 'Aplicamos medidas de seguridad de alto nivel técnico y cifrado seguro para mantener la máxima protección de tus datos en todo momento.',
+    sec5Title: '5. Publicidad, Cookies y Tecnologías de Terceros',
+    sec5Text: 'Este sitio web puede mostrar anuncios gestionados por Google AdSense. Google, como proveedor externo, utiliza cookies para mostrar anuncios basados en visitas anteriores del usuario. Puedes inhabilitar el uso de la cookie DART accediendo a la política de privacidad de la red de contenido y anuncios de Google en https://policies.google.com/technologies/ads. También utilizamos cookies propias para personalizar la experiencia. Al seguir navegando por este sitio, aceptas el uso de estas tecnologías. Consulta la configuración de tu navegador para gestionar o bloquear las cookies.',
   },
 
   // Footer

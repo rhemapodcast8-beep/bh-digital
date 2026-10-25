@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { RouteTracker } from '@/components/analytics/RouteTracker';
+import { GoogleAdSense } from '@/components/analytics/GoogleAdSense';
 import { I18nProvider } from '@/lib/i18n/I18nContext';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -69,6 +70,8 @@ export default function RootLayout({
           <GoogleAnalytics />
           {/* GA4: envia page_view em cada mudança de rota */}
           <RouteTracker />
+          {/* AdSense: carrega o script oficial somente quando NEXT_PUBLIC_ADSENSE_PUBLISHER_ID estiver definido */}
+          <GoogleAdSense />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

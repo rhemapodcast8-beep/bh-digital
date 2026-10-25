@@ -416,6 +416,8 @@ export const en: TranslationType = {
     sec3Text: 'We do not sell, rent, or trade your personal information to third parties. Data is shared solely with trusted infrastructure service providers under rigorous confidentiality agreements.',
     sec4Title: '4. Information Security',
     sec4Text: 'We employ industry-standard encryption protocols and secure hosting environments to ensure your data remains protected at all times.',
+    sec5Title: '5. Advertising, Cookies & Third-Party Technologies',
+    sec5Text: 'This website may display advertisements served by Google AdSense. Google, as a third-party vendor, uses cookies to serve ads based on prior visits. The use of the DART cookie allows Google to serve relevant ads. You may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy at https://policies.google.com/technologies/ads. We also use first-party cookies for personalisation. By continuing to browse this site, you consent to the use of these technologies. Please review your browser settings to manage or block cookies.',
   },
 
   // Footer

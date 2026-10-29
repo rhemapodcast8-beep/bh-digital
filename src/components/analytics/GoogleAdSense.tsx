@@ -1,42 +1,41 @@
-import Script from 'next/script';
-
 /**
- * GoogleAdSense — AdSense Script Loader
+ * GoogleAdSense — AdSense Official Script Loader
  *
- * Injeta o script do Google AdSense via next/script com strategy="afterInteractive".
- * O Next.js deduplica scripts com o mesmo `id`, evitando carregamentos duplicados.
+ * Injeta o script oficial do Google AdSense diretamente no HTML inicial com os atributos
+ * `async` e `crossOrigin="anonymous"`.
+ * No React 19 / Next.js App Router (root layout), tags <script async> são automaticamente
+ * içadas (hoisted) pelo React para o <head> do documento HTML estático na renderização pelo servidor (SSR).
+ * Isso garante que o rastreador de validação do Google AdSense (Mediapartners-Google)
+ * e os bots de auditoria encontrem a tag literal exata dentro de <head> sem depender de JavaScript/hidratação.
  *
- * Configuração:
- *   - Defina NEXT_PUBLIC_ADSENSE_PUBLISHER_ID na Vercel (ex.: ca-pub-XXXXXXXXXXXXXXXXX)
- *   - Sem essa variável, o componente retorna null e NÃO injeta nenhum script.
- *
- * NÃO inclua o identificador de editor diretamente neste arquivo.
- * Obtenha-o no painel do AdSense em:
- *   https://adsense.google.com → Conta → Informações da conta → ID do editor
- *
- * Referência:
- *   https://support.google.com/adsense/answer/9274516
+ * Requisito:
+ *   - Defina NEXT_PUBLIC_ADSENSE_PUBLISHER_ID no ambiente (ex.: ca-pub-1513920784666809).
+ *   - Validação explícita: emite alerta claro se a variável estiver ausente ou fora do formato ca-pub-XXXXXXXXXXXXXXXX.
  */
 export function GoogleAdSense() {
   const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 
-  // Se a variável não estiver configurada, não injeta nenhum script.
-  // Isso evita requisições desnecessárias em ambientes de desenvolvimento.
-  if (!publisherId) return null;
+  if (!publisherId) {
+    console.error(
+      '[GoogleAdSense] ERRO DE CONFIGURAÇÃO: A variável NEXT_PUBLIC_ADSENSE_PUBLISHER_ID não está definida. ' +
+      'O script do Google AdSense NÃO foi carregado. Defina a variável nas configurações de ambiente com o ID oficial ca-pub-1513920784666809.'
+    );
+    return null;
+  }
 
-  // Valida formato mínimo para evitar erros silenciosos: ca-pub-XXXXXXXXXXXXXXXX
-  if (!publisherId.startsWith('ca-pub-')) {
-    console.warn(
-      '[GoogleAdSense] NEXT_PUBLIC_ADSENSE_PUBLISHER_ID inválido. Esperado: ca-pub-XXXXXXXXXXXXXXXXX'
+  // Validação estrita do formato ca-pub- + 16 dígitos
+  if (!/^ca-pub-\d{16}$/.test(publisherId)) {
+    console.error(
+      `[GoogleAdSense] ERRO DE CONFIGURAÇÃO: O valor "${publisherId}" em NEXT_PUBLIC_ADSENSE_PUBLISHER_ID é inválido. ` +
+      'Esperado: ca-pub-XXXXXXXXXXXXXXXX (ca-pub- seguido de 16 dígitos).'
     );
     return null;
   }
 
   return (
-    <Script
-      id="google-adsense"
+    <script
+      async
       src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}
-      strategy="afterInteractive"
       crossOrigin="anonymous"
     />
   );

@@ -442,14 +442,26 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Tipo de consulta inválido.' }, { status: 400 });
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ authenticated: false, attempts: [] });
+  let supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
+  let userId: string | null = null;
+  try {
+    supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.error('Falha ao validar autenticação no progresso do Desafio Bíblico:', error.message);
+      return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
+    }
+    userId = data.user?.id ?? null;
+  } catch {
+    console.error('Falha ao validar autenticação no progresso do Desafio Bíblico.');
+    return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
+  }
+  if (!userId) return NextResponse.json({ authenticated: false, attempts: [] });
 
   const { data, error } = await supabase
     .from('bible_challenge_attempts')
     .select('id, challenge_id, mode, difficulty, score, correct_count, question_count, completed_at, completion_date, is_daily, answers')
-    .eq('user_id', user.id)
+    .eq('user_id', userId)
     .order('completed_at', { ascending: false })
     .limit(100);
 

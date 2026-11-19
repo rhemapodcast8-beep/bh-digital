@@ -65,6 +65,7 @@ export function DesafioBiblicoClient() {
   const [answerLoading, setAnswerLoading] = useState(false);
   const [notice, setNotice] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [progressSource, setProgressSource] = useState<'supabase' | 'local' | 'unavailable'>('local');
   const [syncWarning, setSyncWarning] = useState('');
 
   const currentQuestion = challenge?.questions[activeIndex];
@@ -82,13 +83,16 @@ export function DesafioBiblicoClient() {
       if (data.authenticated) {
         setIsAuthenticated(true);
         setAttempts(data.attempts as ChallengeAttempt[]);
+        setProgressSource('supabase');
       } else {
         setIsAuthenticated(false);
         setAttempts(localAttempts);
+        setProgressSource('local');
       }
       setSyncWarning('');
     } catch {
       setAttempts(localAttempts);
+      setProgressSource('unavailable');
       setSyncWarning('O progresso está salvo neste dispositivo. Entre em contato com o suporte se a sincronização da conta não voltar.');
     }
   }, []);
@@ -366,7 +370,7 @@ export function DesafioBiblicoClient() {
             </section>
 
             <section aria-labelledby="progress-title" className="space-y-4">
-              <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#D4AF37]">Sua jornada</p><h2 id="progress-title" className="mt-1 text-2xl font-bold text-white">Evolução pessoal</h2></div><span className="text-xs text-slate-500">{isAuthenticated ? 'Sincronizado com sua conta' : 'Salvo neste dispositivo'}</span></div>
+              <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#D4AF37]">Sua jornada</p><h2 id="progress-title" className="mt-1 text-2xl font-bold text-white">Evolução pessoal</h2></div><span className="text-xs text-slate-500">{progressSource === 'supabase' ? 'Sincronizado com sua conta' : progressSource === 'unavailable' ? 'Sincronização indisponível · exibindo dados locais' : 'Salvo neste dispositivo'}</span></div>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
                 {[
                   { label: 'Desafios', value: stats.completed, icon: Trophy },

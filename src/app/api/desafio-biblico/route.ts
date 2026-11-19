@@ -16,13 +16,14 @@ type AdminClient = ReturnType<typeof createSupabaseAdminClient>;
 function logServiceFailure(stage: string, error?: unknown) {
   const details = isRecord(error) ? error : {};
   const code = typeof details.code === 'string' ? details.code : undefined;
+  const name = typeof details.name === 'string' ? details.name : undefined;
   const rawMessage = typeof details.message === 'string' ? details.message : undefined;
   const message = rawMessage
     ?.replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, '[redacted credential]')
     .replace(/\bsb_(?:secret|publishable)_[A-Za-z0-9_-]+\b/gi, '[redacted credential]')
     .replace(/\b(Bearer\s+)[^\s,;]+/gi, '$1[redacted]')
     .replace(/((?:api[_ -]?key|token|password|authorization)\s*[:=]\s*)[^\s,;]+/gi, '$1[redacted]');
-  console.error('[desafio-biblico]', { stage, code, message });
+  console.error('[desafio-biblico]', { stage, name, code, message });
 }
 
 interface ChallengeSession {

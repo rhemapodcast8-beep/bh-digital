@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { brasiliaDate, questionById, questionsForChallenge, withoutAnswers, QUESTION_COUNT } from '@/lib/desafio-biblico/engine';
 import { CHALLENGE_CATEGORIES, isChallengeCategory } from '@/lib/desafio-biblico/types';
 import type { ChallengeCategory, ChallengeDifficulty, ChallengeMode } from '@/lib/desafio-biblico/types';
+import { resolveChallengeAuth } from '@/lib/desafio-biblico/auth-session';
 
 const difficulties: ChallengeDifficulty[] = ['facil', 'intermediario', 'avancado'];
 const modes: ChallengeMode[] = ['rapido', 'completo'];
@@ -67,14 +68,17 @@ async function getValidatedUserId(): Promise<{ userId: string | null; failed: bo
   try {
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.auth.getUser();
-    if (error) {
+    const auth = resolveChallengeAuth(data.user, error);
+    if (auth.failed) {
       logServiceFailure('auth.getUser', error);
-      return { userId: null, failed: true };
+      return auth;
     }
-    return { userId: data.user?.id ?? null, failed: false };
+    return auth;
   } catch (error) {
+    const auth = resolveChallengeAuth(null, error);
+    if (!auth.failed) return auth;
     logServiceFailure('auth.client_or_getUser_exception', error);
-    return { userId: null, failed: true };
+    return auth;
   }
 }
 
@@ -479,13 +483,16 @@ export async function GET(request: Request) {
   try {
     supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.auth.getUser();
-    if (error) {
+    const auth = resolveChallengeAuth(data.user, error);
+    if (auth.failed) {
       logServiceFailure('progress.auth.getUser', error);
       return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
     }
-    userId = data.user?.id ?? null;
-  } catch {
-    logServiceFailure('progress.auth_exception');
+    userId = auth.userId;
+  } catch (error) {
+    const auth = resolveChallengeAuth(null, error);
+    if (!auth.failed) return NextResponse.json({ authenticated: false, attempts: [] });
+    logServiceFailure('progress.auth_exception', error);
     return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
   }
   if (!userId) return NextResponse.json({ authenticated: false, attempts: [] });

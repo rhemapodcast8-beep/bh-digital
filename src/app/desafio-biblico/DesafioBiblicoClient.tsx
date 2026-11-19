@@ -119,8 +119,11 @@ export function DesafioBiblicoClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'start', mode, difficulty, daily, categories: daily ? [] : selectedCategories }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Não foi possível iniciar o desafio.');
+      const data = await response.json().catch(() => null) as ({ error?: string } & Partial<Challenge>) | null;
+      if (!response.ok) {
+        throw new Error(data?.error || `Não foi possível iniciar o desafio (HTTP ${response.status}). Tente novamente.`);
+      }
+      if (!data) throw new Error('O servidor retornou uma resposta inválida ao iniciar o desafio.');
       const newChallenge = data as Challenge;
       if (!Array.isArray(newChallenge.questions) || newChallenge.questions.length === 0) {
         throw new Error('Não há perguntas disponíveis para essa combinação de categorias e dificuldade. Tente outra seleção.');

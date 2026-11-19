@@ -12,6 +12,18 @@ const sessionIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-
 
 type AdminClient = ReturnType<typeof createSupabaseAdminClient>;
 
+function logServiceFailure(stage: string, error?: unknown) {
+  const details = isRecord(error) ? error : {};
+  const code = typeof details.code === 'string' ? details.code : undefined;
+  const rawMessage = typeof details.message === 'string' ? details.message : undefined;
+  const message = rawMessage
+    ?.replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, '[redacted credential]')
+    .replace(/\bsb_(?:secret|publishable)_[A-Za-z0-9_-]+\b/gi, '[redacted credential]')
+    .replace(/\b(Bearer\s+)[^\s,;]+/gi, '$1[redacted]')
+    .replace(/((?:api[_ -]?key|token|password|authorization)\s*[:=]\s*)[^\s,;]+/gi, '$1[redacted]');
+  console.error('[desafio-biblico]', { stage, code, message });
+}
+
 interface ChallengeSession {
   id: string;
   user_id: string | null;
@@ -55,9 +67,13 @@ async function getValidatedUserId(): Promise<{ userId: string | null; failed: bo
   try {
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.auth.getUser();
-    if (error) return { userId: null, failed: true };
+    if (error) {
+      logServiceFailure('auth.getUser', error);
+      return { userId: null, failed: true };
+    }
     return { userId: data.user?.id ?? null, failed: false };
-  } catch {
+  } catch (error) {
+    logServiceFailure('auth.client_or_getUser_exception', error);
     return { userId: null, failed: true };
   }
 }
@@ -127,7 +143,7 @@ async function challengeResponse(admin: AdminClient, session: ChallengeSession) 
 
   const { data: rows, error } = await fetchSessionAnswers(admin, session.id);
   if (error) {
-    console.error('Erro ao recuperar respostas do desafio:', error.message);
+    logServiceFailure('sessions.answers_read', error);
     return NextResponse.json({ error: 'Não foi possível recuperar o desafio.' }, { status: 503 });
   }
   const answered = (rows ?? []).flatMap((row: SessionAnswer) => {
@@ -158,11 +174,27 @@ async function startChallenge(body: Record<string, unknown>) {
     return NextResponse.json({ error: 'Nível, formato, categorias ou tipo de desafio inválidos.' }, { status: 400 });
   }
   if (!hasPublicSupabaseConfig()) {
+    const missing = [
+      !process.env.NEXT_PUBLIC_SUPABASE_URL && 'NEXT_PUBLIC_SUPABASE_URL',
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY && 'NEXT_PUBLIC_SUPABASE_ANON_KEY_OR_PUBLISHABLE_KEY',
+    ].filter(Boolean);
+    logServiceFailure(`configuration_missing:${missing.join(',')}`);
     return NextResponse.json({ error: 'O serviço de desafios ainda não está configurado.' }, { status: 503 });
   }
 
-  const admin = getAdminClient();
+  let admin: AdminClient | null;
+  try {
+    admin = getAdminClient();
+  } catch (error) {
+    logServiceFailure('admin_client_initialization', error);
+    return NextResponse.json({ error: 'Não foi possível conectar ao serviço seguro de desafios.' }, { status: 503 });
+  }
   if (!admin) {
+    const missing = [
+      !process.env.NEXT_PUBLIC_SUPABASE_URL && 'NEXT_PUBLIC_SUPABASE_URL',
+      !process.env.SUPABASE_SERVICE_ROLE_KEY && 'SUPABASE_SERVICE_ROLE_KEY',
+    ].filter(Boolean);
+    logServiceFailure(`admin_configuration_missing:${missing.join(',')}`);
     return NextResponse.json({ error: 'O serviço seguro de desafios ainda não está configurado.' }, { status: 503 });
   }
 
@@ -181,7 +213,7 @@ async function startChallenge(body: Record<string, unknown>) {
       .eq('challenge_id', challengeId)
       .maybeSingle();
     if (attemptError) {
-      console.error('Erro ao verificar o desafio diário:', attemptError.message);
+      logServiceFailure('attempts.daily_lookup', attemptError);
       return NextResponse.json({ error: 'Não foi possível verificar o desafio diário.' }, { status: 503 });
     }
     if (completedAttempt) {
@@ -200,7 +232,7 @@ async function startChallenge(body: Record<string, unknown>) {
       .limit(1)
       .maybeSingle();
     if (sessionError) {
-      console.error('Erro ao recuperar a sessão diária:', sessionError.message);
+      logServiceFailure('sessions.daily_lookup', sessionError);
       return NextResponse.json({ error: 'Não foi possível recuperar o desafio diário.' }, { status: 503 });
     }
     if (activeSession) return challengeResponse(admin, activeSession as ChallengeSession);
@@ -217,7 +249,7 @@ async function startChallenge(body: Record<string, unknown>) {
     .from('bible_challenge_sessions')
     .delete()
     .lt('expires_at', now.toISOString());
-  if (cleanupError) console.error('Limpeza de sessões expiradas falhou:', cleanupError.message);
+  if (cleanupError) logServiceFailure('sessions.expired_cleanup', cleanupError);
 
   const { error: insertError } = await admin.from('bible_challenge_sessions').insert({
     id: sessionId,
@@ -245,7 +277,7 @@ async function startChallenge(body: Record<string, unknown>) {
     if (!sessionError && activeSession) return challengeResponse(admin, activeSession as ChallengeSession);
   }
   if (insertError) {
-    console.error('Erro ao criar sessão do desafio:', insertError.message);
+    logServiceFailure('sessions.insert', insertError);
     return NextResponse.json({ error: 'Não foi possível iniciar o desafio. Tente novamente.' }, { status: 503 });
   }
 
@@ -279,7 +311,7 @@ async function answerQuestion(body: Record<string, unknown>) {
   if (failed) return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
   const { data, error } = await fetchSession(admin, sessionId);
   if (error) {
-    console.error('Erro ao consultar sessão do desafio:', error.message);
+    logServiceFailure('sessions.read_for_answer', error);
     return NextResponse.json({ error: 'Não foi possível validar o desafio.' }, { status: 503 });
   }
   if (!data) return NextResponse.json({ error: 'Desafio não encontrado.' }, { status: 404 });
@@ -313,7 +345,7 @@ async function answerQuestion(body: Record<string, unknown>) {
       return NextResponse.json({ error: 'Esta pergunta já recebeu uma resposta nesta sessão.' }, { status: 409 });
     }
   } else if (insertError) {
-    console.error('Erro ao salvar resposta do desafio:', insertError.message);
+    logServiceFailure('session_answers.insert', insertError);
     return NextResponse.json({ error: 'Não foi possível registrar sua resposta.' }, { status: 503 });
   }
 
@@ -333,7 +365,7 @@ async function submitChallenge(body: Record<string, unknown>) {
   if (failed) return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
   const { data, error } = await fetchSession(admin, sessionId);
   if (error) {
-    console.error('Erro ao consultar sessão do desafio:', error.message);
+    logServiceFailure('sessions.read_for_submit', error);
     return NextResponse.json({ error: 'Não foi possível validar o desafio.' }, { status: 503 });
   }
   if (!data) return NextResponse.json({ error: 'Desafio não encontrado.' }, { status: 404 });
@@ -344,7 +376,7 @@ async function submitChallenge(body: Record<string, unknown>) {
   }
   const { data: answerRows, error: answersError } = await fetchSessionAnswers(admin, session.id);
   if (answersError) {
-    console.error('Erro ao recuperar respostas do desafio:', answersError.message);
+    logServiceFailure('session_answers.read_for_submit', answersError);
     return NextResponse.json({ error: 'Não foi possível validar as respostas.' }, { status: 503 });
   }
   const rows = (answerRows ?? []) as SessionAnswer[];
@@ -384,7 +416,7 @@ async function submitChallenge(body: Record<string, unknown>) {
         .eq('challenge_id', session.challenge_id)
         .maybeSingle();
       if (existingAttemptError) {
-        console.error('Erro ao verificar a tentativa concluída:', existingAttemptError.message);
+        logServiceFailure('attempts.duplicate_lookup', existingAttemptError);
         return NextResponse.json({ error: 'Não foi possível recuperar o resultado.' }, { status: 503 });
       }
       if (
@@ -395,7 +427,7 @@ async function submitChallenge(body: Record<string, unknown>) {
       }
       duplicate = true;
     } else if (attemptError) {
-      console.error('Erro ao salvar tentativa do desafio:', attemptError.message);
+      logServiceFailure('attempts.insert', attemptError);
       return NextResponse.json({ error: 'Não foi possível sincronizar o resultado com a conta.' }, { status: 503 });
     }
 
@@ -405,7 +437,7 @@ async function submitChallenge(body: Record<string, unknown>) {
         .update({ completed_at: completedAt })
         .eq('id', session.id)
         .is('completed_at', null);
-      if (completionError) console.error('Erro ao encerrar a sessão concluída:', completionError.message);
+      if (completionError) logServiceFailure('sessions.mark_completed', completionError);
     }
   } else if (!session.completed_at) {
     const accessError = sessionAccessError(session, userId);
@@ -418,7 +450,7 @@ async function submitChallenge(body: Record<string, unknown>) {
       .select('id')
       .maybeSingle();
     if (updateError) {
-      console.error('Erro ao finalizar sessão do desafio:', updateError.message);
+      logServiceFailure('sessions.mark_completed_for_guest', updateError);
       return NextResponse.json({ error: 'Não foi possível concluir o desafio.' }, { status: 503 });
     }
     if (!updatedSession) duplicate = true;
@@ -448,12 +480,12 @@ export async function GET(request: Request) {
     supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.auth.getUser();
     if (error) {
-      console.error('Falha ao validar autenticação no progresso do Desafio Bíblico:', error.message);
+      logServiceFailure('progress.auth.getUser', error);
       return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
     }
     userId = data.user?.id ?? null;
   } catch {
-    console.error('Falha ao validar autenticação no progresso do Desafio Bíblico.');
+    logServiceFailure('progress.auth_exception');
     return NextResponse.json({ error: 'Não foi possível validar a sessão do usuário.' }, { status: 503 });
   }
   if (!userId) return NextResponse.json({ authenticated: false, attempts: [] });
@@ -466,7 +498,7 @@ export async function GET(request: Request) {
     .limit(100);
 
   if (error) {
-    console.error('Erro ao carregar progresso do Desafio Bíblico:', error.message);
+    logServiceFailure('progress.attempts_read', error);
     return NextResponse.json({ authenticated: true, error: 'A tabela de progresso ainda não está disponível.' }, { status: 503 });
   }
 
@@ -496,8 +528,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Corpo da solicitação inválido.' }, { status: 400 });
   }
 
-  if (body.type === 'start') return startChallenge(body);
-  if (body.type === 'answer') return answerQuestion(body);
-  if (body.type === 'submit') return submitChallenge(body);
+  try {
+    if (body.type === 'start') return await startChallenge(body);
+    if (body.type === 'answer') return await answerQuestion(body);
+    if (body.type === 'submit') return await submitChallenge(body);
+  } catch (error) {
+    const type = typeof body.type === 'string' ? body.type : 'unknown';
+    logServiceFailure(`post.${type}.unhandled_exception`, error);
+    const message = type === 'start'
+      ? 'Não foi possível iniciar o desafio agora. Tente novamente.'
+      : 'Não foi possível concluir a solicitação agora. Tente novamente.';
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
   return NextResponse.json({ error: 'Tipo de solicitação inválido.' }, { status: 400 });
 }

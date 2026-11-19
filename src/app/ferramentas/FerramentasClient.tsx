@@ -13,57 +13,10 @@ import {
   Smartphone,
   Star,
   Library,
-  Book
+  Book,
+  Trophy,
 } from 'lucide-react';
 import Image from 'next/image';
-
-const FERRAMENTAS_IA = [
-  {
-    id: 'esboco',
-    title: 'Gerador de Esboço Bíblico',
-    description: 'Crie uma estrutura lógica e homilética completa para pregações com introdução, tópicos e aplicação prática.',
-    icon: BookOpen,
-    href: '/ferramentas/gerador-esboco',
-    buttonText: 'TESTAR GERADOR',
-    color: 'from-blue-600 to-blue-800'
-  },
-  {
-    id: 'exegese',
-    title: 'Explicador Exegético de Passagens',
-    description: 'Faça uma exegese profunda e clara de qualquer texto bíblico considerando o contexto histórico, literário e teológico.',
-    icon: Search,
-    href: '/ferramentas/exegese',
-    buttonText: 'EXPLICAR PASSAGEM',
-    color: 'from-purple-600 to-purple-800'
-  },
-  {
-    id: 'personagem',
-    title: 'Estudo de Personagens Bíblicos',
-    description: 'Gere um estudo detalhado e biográfico sobre qualquer personagem bíblico, com virtudes, falhas e lições.',
-    icon: User,
-    href: '/ferramentas/personagens',
-    buttonText: 'GERAR ESTUDO',
-    color: 'from-emerald-600 to-emerald-800'
-  },
-  {
-    id: 'perguntas',
-    title: 'Gerador de Perguntas para Grupos',
-    description: 'Crie perguntas para discussão em grupo (EBD, PG, Jovens) focadas em observação, interpretação e aplicação.',
-    icon: MessageCircle,
-    href: '/ferramentas/perguntas',
-    buttonText: 'GERAR PERGUNTAS',
-    color: 'from-orange-600 to-orange-800'
-  },
-  {
-    id: 'sermao',
-    title: 'Preparador Completo de Sermões',
-    description: 'Desenvolva um sermão completo e detalhado, com transições, ilustrações, e apelo final focado no público-alvo.',
-    icon: FileText,
-    href: '/ferramentas/sermao',
-    buttonText: 'PREPARAR SERMÃO',
-    color: 'from-[#D4AF37] to-[#C59B27]'
-  }
-];
 
 import { useI18n } from '@/lib/i18n/I18nContext';
 
@@ -293,6 +246,20 @@ export function FerramentasClient() {
       </div>
 
       <hr className="border-slate-800" />
+
+      <section className="space-y-5" aria-labelledby="desafio-biblico-title">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#D4AF37]">Aprendizagem interativa</p>
+          <h2 id="desafio-biblico-title" className="mt-2 text-2xl font-bold text-white">Desafio Bíblico BH</h2>
+        </div>
+        <Link href="/desafio-biblico" className="group flex flex-col gap-5 rounded-3xl border border-[#D4AF37]/25 bg-gradient-to-r from-[#101B34] to-[#080E1B] p-6 transition hover:border-[#D4AF37]/60 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div className="flex items-start gap-4">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/25 bg-[#D4AF37]/10 text-[#E5C05B] transition group-hover:scale-105"><Trophy className="h-7 w-7" /></span>
+            <span><span className="block text-xl font-bold text-white transition group-hover:text-[#E5C05B]">Aprenda com cada pergunta</span><span className="mt-2 block max-w-2xl text-sm leading-6 text-slate-400">Desafios rápidos ou completos, três níveis de dificuldade, explicações bíblicas e acompanhamento do seu progresso.</span></span>
+          </div>
+          <span className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#D4AF37] px-5 py-3 text-sm font-bold text-[#070D18] transition group-hover:bg-[#E5C05B]">Começar desafio <ChevronRight className="h-4 w-4" /></span>
+        </Link>
+      </section>
 
       {/* Grid de Ferramentas IA */}
       <div className="space-y-8">
